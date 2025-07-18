@@ -20,3 +20,22 @@ Tiene el mismo flujo del sistema fisico interactivo, una entrada, un proceso y u
 
 ❓¿Cómo podrías aplicar lo que has visto en tu perfil profesional?   
 Lo primero que se me ocurre es que se puede aplicar este enfoque en la creacion de personajes con variaciones en colores y formas de una manera mas eficiente. Tambien podria ser una forma interesante para explorar estilos visuales cambiando ciertos parametros o datos lo que creo seria muy util para proyectos con muchos assets. Se puede usar para generar escenarios o niveles, ajustando como el numero de obstaculos y la distribucion de estos. Creo que colaborar con el sistema de esta forma es mas responsable y consciente que simplemente dejarle todo el trabajo
+
+### 📚 Actividad 03 - Herramientas y tecnologías
+💡Luego de hacer el ejercicio, responde la siguiente pregunta: En este sistemas físico interactivo identifica los inputs, outputs y el proceso.   
+Para el MICRO BIT
++ Imputs:
+  + Boton a y b
+  + Sensor de acelerometro al sacudir
+  + Los datos y la energia recibida por el puerto USB desde el PC 
++ Outputs:
+  + Datos enviados al computador por USB (letras a, b o sacudida)
+  + Imagenes en el display (mariposa, corazon, flechitas, reloj, caras de emociones, vaquita, fantasma, entre muchos mas)
++ Proceso: 
+  
+Para el PC
++ Imputs:
+  + El serial (datos, informacion) que se recibe a traves de la USB (boton presionado a o b, sacudida)
++ Outputs:
+  + Cambio de color del circulo en pantalla segun los datos recibidos (rojo para boton a, amarillo para boton b o verde para sacudida)
++ Proceso:
