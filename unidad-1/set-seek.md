@@ -24,18 +24,19 @@ Lo primero que se me ocurre es que se puede aplicar este enfoque en la creacion 
 ### 📚 Actividad 03 - Herramientas y tecnologías
 💡Luego de hacer el ejercicio, responde la siguiente pregunta: En este sistemas físico interactivo identifica los inputs, outputs y el proceso.   
 Para el MICRO BIT
-+ Imputs:
++ Inputs:
   + Boton a y b
   + Sensor de acelerometro al sacudir
   + Los datos y la energia recibida por el puerto USB desde el PC 
 + Outputs:
   + Datos enviados al computador por USB (letras a, b o sacudida)
   + Imagenes en el display (mariposa, corazon, flechitas, reloj, caras de emociones, vaquita, fantasma, entre muchos mas)
-+ Proceso: 
++ Proceso: El micro bit al detectar los inputs interpreta el tipo de interaccion y segun el caso envia la informacion por el puerto USB
   
 Para el PC
-+ Imputs:
++ Inputs:
   + El serial (datos, informacion) que se recibe a traves de la USB (boton presionado a o b, sacudida)
+  + El boton Send Love
 + Outputs:
   + Cambio de color del circulo en pantalla segun los datos recibidos (rojo para boton a, amarillo para boton b o verde para sacudida)
-+ Proceso:
++ Proceso: En caso del primer input el programa procesa esa entra y actualiza el color del circulito dependiendo de los datos seriales. Por otro lado, cuando se usa el boton Send Love el programa envia un serial al micro bit para activar la animacion de corazon y luego carita feliz
