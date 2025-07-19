@@ -40,3 +40,42 @@ Para el PC
 + Outputs:
   + Cambio de color del circulo en pantalla segun los datos recibidos (rojo para boton a, amarillo para boton b o verde para sacudida)
 + Proceso: En caso del primer input el programa procesa esa entra y actualiza el color del circulito dependiendo de los datos seriales. Por otro lado, cuando se usa el boton Send Love el programa envia un serial al micro bit para activar la animacion de corazon y luego carita feliz
+
+### 📚 Actividad 04 - Generando patrones visuales
+[🌟 Ver mi programa en p5.js](https://editor.p5js.org/VanDiosa/sketches/AqXjMu_mZ)
+
+```javascript
+let circles = []; // un arreglo donde se guardan los circulos que se van generando
+
+function setup() { //funcion inicial que se ejecuta solo una vez
+  createCanvas(600, 600);
+  noStroke(); //circulos sin borde
+  background(20); //color del fondo al ser solo un numero se interpreta como gris
+}
+
+function draw() {
+  background(20, 20, 20, 25); // gris con transparencia para el efecto de rastro (R,G,B,A)
+
+  for (let c of circles) { // aqui se dice como "por cada"
+    let size = sin(frameCount * 0.05 + c.phase) * 20 + 40; //se usa la funcion seno para que el tamaño varie en cada fotograma. 0.05 es la velocidad de efecto. C.phase es para dar ritmos diferentes a cada uno. el *20 + 40 es como el rango de tamaño
+    c.x += sin(frameCount * 0.05 + c.phase) * 0.5; // el 0,5 es la distancia del movimiento
+    c.y += cos(frameCount * 0.05 + c.phase) * 0.5;
+    fill(c.color);
+    ellipse(c.x, c.y, size, size);
+  }
+}
+
+function mousePressed() {
+  let newCircle = {
+    x: random(width), 
+    y: random(height), //coordenadas random para x y y
+    phase: random(TWO_PI), //ritmo de oscilacion aleatorio
+    color: color(random(100, 255), random(100, 255), random(100, 255), 200) // (R,G,B,A)
+  };
+  circles.push(newCircle); //se añade al arreglo
+
+  if (circles.length > 70) {
+    circles.shift(); // para no saturar se coloca un limite de circulos
+  }
+}
+```
