@@ -47,7 +47,7 @@ Para el PC
 + frameacount() -> para que el cambio con sin() ocurra cada 0.05
 + random() -> para que cada circulo tenga un color y ritmo diferente
 + lerp() -> para que los circulos sigan al mouse
-+ TWO_PI() ->
++ TWO_PI() -> se usa para que cada circulo al crearse sea del tamaño de una parte distinta de la funcion sin
 
 [🌟 Ver mi programa en p5.js](https://editor.p5js.org/VanDiosa/sketches/AqXjMu_mZ)
 
