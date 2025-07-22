@@ -42,6 +42,13 @@ Para el PC
 + Proceso: En caso del primer input el programa procesa esa entra y actualiza el color del circulito dependiendo de los datos seriales. Por otro lado, cuando se usa el boton Send Love el programa envia un serial al micro bit para activar la animacion de corazon y luego carita feliz
 
 ### 📚 Actividad 04 - Generando patrones visuales
+🌟En el programa de esta actividad estoy usando las siguientes funciones:
++ sin() -> para el cambio de tamaños de los circulo
++ frameacount() -> para que el cambio con sin() ocurra cada 0.05
++ random() -> para que cada circulo tenga un color y ritmo diferente
++ lerp() -> para que los circulos sigan al mouse
++ TWO_PI() ->
+
 [🌟 Ver mi programa en p5.js](https://editor.p5js.org/VanDiosa/sketches/AqXjMu_mZ)
 
 ```javascript
@@ -58,8 +65,9 @@ function draw() {
 
   for (let c of circles) { // aqui se dice como "por cada"
     let size = sin(frameCount * 0.05 + c.phase) * 20 + 40; //se usa la funcion seno para que el tamaño varie en cada fotograma. 0.05 es la velocidad de efecto. C.phase es para dar ritmos diferentes a cada uno. el *20 + 40 es como el rango de tamaño
-    c.x += sin(frameCount * 0.05 + c.phase) * 0.5; // el 0,5 es la distancia del movimiento
-    c.y += cos(frameCount * 0.05 + c.phase) * 0.5;
+    // movimiento hacia el mouse
+    c.x = lerp(c.x, mouseX, 0.02); // 0.02 es la suavidad del seguimiento
+    c.y = lerp(c.y, mouseY, 0.02);
     fill(c.color);
     ellipse(c.x, c.y, size, size);
   }
@@ -67,9 +75,9 @@ function draw() {
 
 function mousePressed() {
   let newCircle = {
-    x: random(width), 
-    y: random(height), //coordenadas random para x y y
-    phase: random(TWO_PI), //ritmo de oscilacion aleatorio
+    x: mouseX, //para que los circulos salgan donde el mouse da click
+    y: mouseY,
+    phase: random(TWO_PI), //ritmo de oscilacion aleatorio, se le asigna a cada circulo una parte distinta de la funcion sin
     color: color(random(100, 255), random(100, 255), random(100, 255), 200) // (R,G,B,A)
   };
   circles.push(newCircle); //se añade al arreglo
@@ -79,3 +87,9 @@ function mousePressed() {
   }
 }
 ```
+🌟Video del resultado
+
+https://github.com/user-attachments/assets/052fa868-9ec4-42b7-99c5-b6b50790661b
+
+
+
