@@ -1,4 +1,4 @@
-<img width="539" height="31" alt="image" src="https://github.com/user-attachments/assets/46a4de91-6f10-44b8-b960-3411b3b3c2d4" /># Unidad 1
+# Unidad 1
 
 ## 🛠 Fase: Apply
 
@@ -7,17 +7,18 @@
 
 Para el MICRO BIT
 + Inputs:
-  + 
+  + El boton A
 + Outputs:
-  + 
-+ Proceso: 
+  + Informacion serial que se envia al PC
++ Procesamiento: Revisar o leer si el boton se esta presionando, en caso tal envia A y de lo contrario envia N
   
 Para el PC
 + Inputs:
-  + 
+  + Boton conectar al micro:bit
+  + Informacion recibida por el serial
 + Outputs:
-  + 
-+ Proceso: 
+  + El cambio de color del cuadrado, rojo si le llego A y verde si le llego N
++ Procesamiento: Se lee la informacion recibida y cambia el output dependiendo de la letra que le llego
 
 
 ### 📚 Actividad 06 - Control de movimiento con micro:bit
