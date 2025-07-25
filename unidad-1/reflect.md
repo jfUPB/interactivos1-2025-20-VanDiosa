@@ -50,5 +50,18 @@ Me gusto ese metodo porque fue una gran referencia para el desarrollo de la acti
 ### 📚 Actividad 08 - Coevaluación
 
 
-### 📚 Actividad 09 - Feedback
+### 📚 Actividad 09 - Feedback   
+❓1. Continuar: ¿Qué actividad, video o ejemplo de esta unidad te resultó más inspirador o te ayudó más a entender el potencial de los sistemas físicos interactivos?   
+La verdad en cuanto a entender el potencial diria que los videos ya que eran proyectos grandes y avanzados entonces pude ver como la magnitud a la que se puede llegar con estos sistemas. Pero de igual forma el codigo del ejemplo de la actvidad 5 me ayudo mucho
 
+❓2. Dejar de hacer: ¿Hubo alguna parte que te pareció demasiado abstracta, muy rápida o confusa? ¿Hay algo que crees que podríamos cambiar para que sea más claro?   
+Al principio pense que el tiempo no me iba a dar para realizar las actividades, pero en realidad fue el tiempo justo. Por lo cual en este momento no se me ocurre nada para cambiar
+
+❓3. Empezar a hacer: ¿Qué te genera más curiosidad ahora? ¿Te gustaría explorar más sensores del micro:bit (luz, temperatura), crear visualizaciones más complejas en p5.js o ver más ejemplos de proyectos artísticos?   
+Me gustaria explorar mas ejemplos de proyectos artisticos ya que todo lo relacionado con el arte es lo q mas me llama la atencion, no me importa si son ejemplos sencillos, puesto que puedo ir aprendiendo de a poco
+
+❓4. Balance inspiración vs. técnica: ¿Cómo sentiste el equilibrio entre ver los videos inspiradores de la Actividad 01 y la parte técnica de conectar las herramientas en las actividades 03-06?   
+Siento que hubo un buen equilibrio, los videos nos ayudan a imaginar las posibilidades de proximas actividades. Las parte tecnica mostrada paso a paso fue de mucha ayuda para no sentirme tan perdida.
+
+❓5. Comentario adicional: ¿Hay algo más que quieras compartir sobre tu experiencia en esta unidad introductoria?
+Mi experiencia fue comoda, pense que la conexion con el microbit seria mas compleja, pero las actividades, explicaciones, y consultas individuales, fueron muy utiles para aprender
