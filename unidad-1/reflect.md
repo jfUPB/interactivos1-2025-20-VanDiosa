@@ -48,7 +48,15 @@ No se me habia ocurrido para que me podria servir, pero luego de ver los videos 
 Me gusto ese metodo porque fue una gran referencia para el desarrollo de la actividad 6, y me permitio entender bien cada linea a medida que el profe nos iba explicando
 
 ### 📚 Actividad 08 - Coevaluación
+El compañero con el que intercambie fue Tomas y este es el link de [su repositorio](https://github.com/jfUPB/interactivos1-2025-20-Tomasm12/blob/unidad1/apply/unidad-1/apply.md)
 
+Las diferencias entre soluciones son:
++ El compañero creo 2 variables globales para el movimiento del circulo tanto en x como en y. En mi caso solo hice una variable global para el movimiento en x
++ Otra diferencia meramente estetica es el diametro de los circulos, el de el es de 100 y el mio de 50
++ En el caso del compañero uso un sleep en cada condicion del codigo del micro bit, pero yo solo use uno. Creo que por ese lado lo de el fue mas eficiente en terminos de no enviar muchos datos seguidos
++ El tambien uso un ellipseMode(CENTER), yo no lo use y tampoco lo tuve como presente pero creo que es un recurso bueno para tener un mejor contro en el movimiento
+
+Para proximas actividades tendre presente el uso del sleep para tener codigos menos cargados de informacion
 
 ### 📚 Actividad 09 - Feedback   
 ❓1. Continuar: ¿Qué actividad, video o ejemplo de esta unidad te resultó más inspirador o te ayudó más a entender el potencial de los sistemas físicos interactivos?   
