@@ -26,3 +26,51 @@ En este programa solo hay eventos internos, no se usan botones o sensores
 + display.set_pixel(...): Mostrar un pixel con brillo 0 o 9
 + Alternar estado del pixel entre 0 (apagar) y 9 (encender)
 + self.startTime = utime.ticks_ms(): Actualizar tiempo cada que se actualiza el estado
+
+### 📚 Actividad 02 - Implementando un semáforo con máquina de estados
+⭐Codigo semaforo:
+```python
+from microbit import *
+import utime #para manejar el tiempo en milisegundos
+
+class Semaforo: #representa el semaforo
+    def __init__(self): 
+        self.state = "Rojo" #ESTADO inicial del semaforo
+        self.startTime = utime.ticks_ms() #ACCION de guardar el tiempo actual
+        self.interval = 3000  #ACCION: duracion de cada luz en ms
+
+    def update(self): #metodo que actualiza el estado
+
+        currentTime = utime.ticks_ms() #ACCION: mirar el tiempo q ha pasado
+
+        if utime.ticks_diff(currentTime, self.startTime) > self.interval: #EVENTO revisa si el tiempo actual  es superior al intervalo definido
+            #ESTADOS:
+            if self.state == "Rojo": #si el estado actual es rojo
+                self.state = "Verde" #pasa a verde
+            elif self.state == "Verde": #si es verde
+                self.state = "Amarillo" #pasa a amarillo
+            elif self.state == "Amarillo": #si es amarillo
+                self.state = "Rojo" #pasa a rojo
+
+            self.startTime = currentTime  #ACCION reinicia contador del tiempo
+
+        self.mostrar() #ACCION llama el metodo mostrar para encender el led que corresponda
+        
+    def mostrar(self): #metodo para imprimir el semaforo
+        #ACCIONES:
+        display.clear() # limpia la pantalla
+        if self.state == "Rojo": #si en el if de uptade el estado paso a ser rojo
+            display.set_pixel(2, 0, 9) #se enciende el led superior medio
+        elif self.state == "Amarillo":  #si el estado actual es amarillo
+            display.set_pixel(2, 2, 9) #se enciende el led medio de la fila 3
+        elif self.state == "Verde": #si el estado actual es verde
+            display.set_pixel(2, 4, 9) #se enciende el led medio de la fila inferior
+            
+semaforo = Semaforo() #ACCION: crear semaforo con estado inicial (rojo)
+
+while True: #EVENTO en bucle, revisa el tiempo 
+    semaforo.update()
+    sleep(100) #evitar sobrecarga
+```
+
+❓Identifica los estados, eventos y acciones en tu código.
