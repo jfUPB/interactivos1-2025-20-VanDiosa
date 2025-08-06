@@ -84,3 +84,27 @@ while True: #EVENTO en bucle, revisa el tiempo
 + display.clear() -> Se limpia la pantalla
 + self.startTime = utime.ticks_ms() -> Actualizar el tiempo de inicio del nuevo estado
 + Mostrar el led correspondiente al color del estado actual: display.set_pixel(0, 2, 9) → Rojo, display.set_pixel(2, 2, 9) → Amarillo, display.set_pixel(4, 2, 9) -> Verde
+
+### 📚 Actividad 03 - Controlando la pantalla con una máquina de estados y concurrencia    
+❓Explica por qué decimos que este programa permite realizar de manera concurrente varias tareas.   
+Este programa simula concurrencia mediante el uso de una maquina de estados y control por tiempo. El programa no se detiene, sino que verifica constantemente si ha pasado el intervalo de tiempo necesario para cambiar de estado, permitiendo que otras funciones o tareas se ejecuten en paralelo en caso tal. Se manejan multiples procesos (esperar si se presiona el boton A) sin bloquear el flujo principal (cambiar la secuencia de caritas)
+
+❓Identifica los estados, eventos y acciones en el programa.
+⭐Estados:
++ STATE_INIT
++ STATE_HAPPY
++ STATE_SMILE
++ STATE_SAD
+
+⭐Eventos:
++ STATE_INIT -> Inicio del programa
++ utime.ticks_diff(utime.ticks_ms(), start_time) > interval: -> Verificacion del cumplimiento del intervalo de tiempo definido
++ button_a.was_pressed() -> es como, en caso tal de presionarse el botón A 
+  
+⭐Acciones:
++  display.show( ) -> mostrar carita correspondiente al estado actual
++  start_time = utime.ticks_ms() -> reiniciar contador de tiempo
++  interval = -> definir duracion del estado actual
++  current_state = -> cambio al siguiente estado
+
+❓Describe y aplica al menos 3 vectores de prueba para el programa. Para definir un vector de prueba debes llevar al sistema a un estado, generar los eventos y observar el estado siguiente y las acciones que ocurrirán. Por tanto, un vector de prueba tiene unas condiciones iniciales del sistema, unos resultados esperados y los resultados realmente obtenidos. Si el resultado obtenido es igual al esperado entonces el sistema pasó el vector de prueba, de lo contrario el sistema puede tener un error.
