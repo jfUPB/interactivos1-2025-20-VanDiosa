@@ -16,7 +16,7 @@ En este caso, el estado de guarda puede tomar dos valores:
 + Init: cuando el pixel se inicializa (se enciende por primera vez)
 + WaitTimeout: cuando esta esperando que pase el tiempo para cambiar su brillo
 
-❓¿Cuáles son los eventos/inputs en el programa?
+❓¿Cuáles son los eventos/inputs en el programa?    
 En este programa solo hay eventos internos, no se usan botones o sensores
 + Inicio del programa -> creacion del objeto en el estado init:  **self.state = "Init"**
 + Cambio de estado Init a WaitTimeout -> de **self.state == "Init"** a **self.state = "WaitTimeout"**
@@ -73,4 +73,14 @@ while True: #EVENTO en bucle, revisa el tiempo
     sleep(100) #evitar sobrecarga
 ```
 
-❓Identifica los estados, eventos y acciones en tu código.
+❓Identifica los estados, eventos y acciones en tu código.    
+⭐Estados: Son tres los principales, los colores del semaforo. El estado actual se almacena en "self.state" y cambia ciclicamente entre Red, Green, Yellow, Red, y asi sucesivamente
+
+⭐Eventos: Al igual que en el ejemplo de la actividad 01 los eventos del semaforo tambien son internos, ya que, no se usan botones ni sensores: Los eventos son:    
++ self.state = "Red" -> Creación del objeto con estado inicial Red al inicio del programa
++ utime.ticks_diff(utime.ticks_ms(), self.startTime) > self.interval -> Verificacion del cumplimiento del intervalo de tiempo definido
+
+⭐Acciones: cada que cambia de estado suceden ciertas acciones
++ display.clear() -> Se limpia la pantalla
++ self.startTime = utime.ticks_ms() -> Actualizar el tiempo de inicio del nuevo estado
++ Mostrar el led correspondiente al color del estado actual: display.set_pixel(0, 2, 9) → Rojo, display.set_pixel(2, 2, 9) → Amarillo, display.set_pixel(4, 2, 9) -> Verde
