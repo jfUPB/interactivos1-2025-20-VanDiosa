@@ -89,7 +89,7 @@ while True: #EVENTO en bucle, revisa el tiempo
 ❓Explica por qué decimos que este programa permite realizar de manera concurrente varias tareas.   
 Este programa simula concurrencia mediante el uso de una maquina de estados y control por tiempo. El programa no se detiene, sino que verifica constantemente si ha pasado el intervalo de tiempo necesario para cambiar de estado, permitiendo que otras funciones o tareas se ejecuten en paralelo en caso tal. Se manejan multiples procesos (esperar si se presiona el boton A) sin bloquear el flujo principal (cambiar la secuencia de caritas)
 
-❓Identifica los estados, eventos y acciones en el programa.
+❓Identifica los estados, eventos y acciones en el programa.    
 ⭐Estados:
 + STATE_INIT
 + STATE_HAPPY
@@ -108,3 +108,8 @@ Este programa simula concurrencia mediante el uso de una maquina de estados y co
 +  current_state = -> cambio al siguiente estado
 
 ❓Describe y aplica al menos 3 vectores de prueba para el programa. Para definir un vector de prueba debes llevar al sistema a un estado, generar los eventos y observar el estado siguiente y las acciones que ocurrirán. Por tanto, un vector de prueba tiene unas condiciones iniciales del sistema, unos resultados esperados y los resultados realmente obtenidos. Si el resultado obtenido es igual al esperado entonces el sistema pasó el vector de prueba, de lo contrario el sistema puede tener un error.
+
+No comprendi bien si habia q dejar por escrito este punto, pero en clase fuimos comprobando la funcionalidad del programa    
+⭐Se verifico que al iniciar el programa (STATE_INIT), este cambiara automaticamente a STATE_HAPPY despues del primer intervalo de tiempo, mostrando la carita correspondiente    
+⭐Se probo que al presionar el botón A en cualquier momento, el sistema reaccionaba correctamente y mostraba la carita del estado anterior    
+⭐ Tambien revisamos que cada carita se mostraba durante el intervalo definido
