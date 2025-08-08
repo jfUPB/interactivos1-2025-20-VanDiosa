@@ -4,8 +4,7 @@
 ## 🛠 Fase: Apply
 ### 📚 Actividad 04 - Diseño de la lógica de una bomba temporizada    
 ⭐Diagrama maquina de estados
-<img width="752" height="924" alt="Diagrama de estados – Bomba" src="https://github.com/user-attachments/assets/df06918a-d275-4c53-91a3-df8a4019e75e" />
-
+<img width="806" height="978" alt="Diagrama de estados – Bomba" src="https://github.com/user-attachments/assets/e5a98432-81b4-4466-adf1-2700cdb957a7" />
 
 
 ### 📚 Actividad 05 - Implementando la Bomba Temporizada    
@@ -50,12 +49,12 @@ while True:
             countdown -= 1
             last_tick = now
 
-            if countdown > -1:
+            if countdown >= 0:
                 display.show(str(countdown)) #aqui no use el scroll por temas de agilidad de la cuenta atras
-            else: #cambio de estado
+            else:
                 state = STATE_EXPLODED
                 music.play(music.POWER_DOWN)
-
+            
     elif state == STATE_EXPLODED:
         display.show(Image.SKULL)
 
@@ -77,5 +76,6 @@ STATE_ARMED
 STATE_EXPLODED
 + ¿Despues de explotar la calavera se muestra indefinidamente? -> Si -> Funciona correctamente
 + Tocar el boton touch -> ¿Se reinicia al STATE_CONFIG y el contador esta en 20? -> Si -> Funciona correctamente
+
 
 
