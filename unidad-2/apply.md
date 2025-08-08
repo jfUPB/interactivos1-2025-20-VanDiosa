@@ -4,7 +4,8 @@
 ## 🛠 Fase: Apply
 ### 📚 Actividad 04 - Diseño de la lógica de una bomba temporizada    
 ⭐Diagrama maquina de estados
-<img width="821" height="903" alt="Diagrama de estados – Bomba" src="https://github.com/user-attachments/assets/0a9ba7de-fc55-43ba-9155-4b87b5d1434f" />
+<img width="752" height="924" alt="Diagrama de estados – Bomba" src="https://github.com/user-attachments/assets/df06918a-d275-4c53-91a3-df8a4019e75e" />
+
 
 
 ### 📚 Actividad 05 - Implementando la Bomba Temporizada    
@@ -76,3 +77,4 @@ STATE_ARMED
 STATE_EXPLODED
 + ¿Despues de explotar la calavera se muestra indefinidamente? -> Si -> Funciona correctamente
 + Tocar el boton touch -> ¿Se reinicia al estado inicial y el contador esta en 20? -> Si -> Funciona correctamente
+
