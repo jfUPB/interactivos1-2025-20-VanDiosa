@@ -64,7 +64,7 @@ while True:
             countdown = 20
             display.clear()
 ```
-⭐Vectores de prueba básicos
+⭐Vectores de prueba básicos    
 STATE_CONFIG
 + Presionar boton A -> ¿El temporizador aumenta en 1? -> Si-> Funciona correctamente
 + Presionar boton B -> ¿El temporizador disminuye en 1? -> Si -> Funciona correctamente
@@ -76,5 +76,6 @@ STATE_ARMED
 
 STATE_EXPLODED
 + ¿Despues de explotar la calavera se muestra indefinidamente? -> Si -> Funciona correctamente
-+ Tocar el boton touch -> ¿Se reinicia al estado inicial y el contador esta en 20? -> Si -> Funciona correctamente
++ Tocar el boton touch -> ¿Se reinicia al STATE_CONFIG y el contador esta en 20? -> Si -> Funciona correctamente
+
 
