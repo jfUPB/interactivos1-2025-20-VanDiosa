@@ -28,13 +28,19 @@ Es como un lista de pruebas que se hace para asegurarse de que el programa este 
 💡Parte 2: reflexión sobre tu proceso (Metacognición)    
 ❓1. ¿Qué parte del diseño de la bomba temporizada te resultó más desafiante: crear el diagrama de estados (Actividad 04) o traducir ese diagrama a código MicroPython (Actividad 05)? ¿Por qué?
 
+Lo mas difícil para mi fue realizar el diagrama, ya que en otros cursos habia trabajado con diagramas de flujo y de clases pero no con este tipo, por lo que me tomo mas tiempo entenderlo y hacerlo
+
 ❓2. Describe un error o “bug” que encontraste al implementar tu programa. ¿Cómo te ayudó pensar en términos de estados, eventos y transiciones a identificar y solucionar el problema?
+
+El problema principal que tuve estuvo en la condicion del if dentro del estado STATE_ARMED. La logica hacia que el contador llegara a valores negativos o por alguna razon contaba de dos en dos o explotaba en 3. Pensar en estados, eventos y transiciones me ayudo a ver cuando debia ocurrir la transicion a STATE_EXPLODED (justo despues de mostrar 0), corregi la condicion del if y empezo a comportarse como esperaba
 
 ❓3. El problema de la bomba era complejo. ¿Qué estrategia usaste para abordarlo? ¿Comenzaste con una versión simple y añadiste funcionalidades poco a poco?
 
+Empece con algo simple, solo el estado de configuracion y que mostrara el tiempo. Luego agregue la parte de armarla con shake y despues la cuenta regresiva (por prueba use 5 y no 20). Por ultimo sume la explosion y el reinicio. Asi era mas facil probar cada parte y no tener errores en todo a la vez
+
 ❓4. Ahora que entiendes el patrón de máquina de estados, ¿En qué otro tipo de proyecto o sistema de entretenimiento digital crees que podrías aplicarlo?
 
-### 📚 Actividad 08 - Coevaluación
+Creo que se podria aplicar en un juego tipo Bop It (parecido a Simon dice), donde el jugador debe reaccionar rapidamente a diferentes ordenes que cambian segun el estado del juego. Tambien en un videojuego con enemigos que patrullan y dependiendo de lo que ocurra cambian su comportamiento para atacar, perseguir o retirarse. La maquina de estados ayudaria a organizar y controlar de forma clara las transiciones y acciones segun lo que pase en cada momento
 
 ### 📚 Actividad 09 - Feedback   
 ❓1. Continuar: ¿Qué actividad, explicación o ejemplo de esta unidad te ayudó más a entender el poder de las máquinas de estados? ¿Qué elemento consideras que es indispensable y debería mantener?
@@ -46,4 +52,5 @@ Es como un lista de pruebas que se hace para asegurarse de que el programa este 
 ❓4. Ritmo y dificultad: En una escala del 1 (muy fácil) al 5 (muy difícil), ¿Cómo calificarías la dificultad de pasar del análisis de un programa (Actividad 03) al diseño desde cero de uno complejo (Actividad 04 y 05)? ¿Por qué?
 
 ❓5. Comentario adicional: ¿Hay algo más que te gustaría compartir sobre tu proceso de aprendizaje en esta unidad? ¿Algún momento de frustración o de “¡Aha!” que quieras destacar?
+
 
