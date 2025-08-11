@@ -15,7 +15,11 @@ Una maquina de estados es una forma de programar donde se divide el codigo en di
 
 ❓2. Explica por qué la técnica de máquina de estados es tan útil para gestionar la “concurrencia” (atender un temporizador y botones “al mismo tiempo”) en un dispositivo con un solo hilo de ejecución como el micro:bit. ¿Qué problema soluciona en comparación con usar funciones como sleep()?
 
+Porque con la maquina de estados el programa va revisando rapido en que estado este y que debe hacer, sin quedarse dormido esperando. Asi puede ir atendiendo el temporizador, los botones y otros eventos casi al mismo tiempo. Si usaramos sleep() el microbit se quedaria parado y no podria reaccionar a otras cosas hasta que pase cierto tiempo
+
 ❓3. Imagina que tienes que añadir una nueva funcionalidad a la bomba temporizada: si se agita (shake) el micro:bit mientras la cuenta regresiva está activa, el tiempo se reduce a la mitad. ¿Cómo modificarías tu diagrama de máquina de estados para incluir este nuevo evento y acción?
+
+En el estado ARMADO añadiria un nuevo evento "accelerometer.was_gesture(shake)" que en vez de cambiar de estado, haga la accion de dividir el tiempo que queda entre 2
 
 ❓4. Explica qué es un “vector de prueba” y por qué es una herramienta crucial para verificar que una máquina de estados funciona como se espera.    
 
@@ -42,3 +46,4 @@ Es como un lista de pruebas que se hace para asegurarse de que el programa este 
 ❓4. Ritmo y dificultad: En una escala del 1 (muy fácil) al 5 (muy difícil), ¿Cómo calificarías la dificultad de pasar del análisis de un programa (Actividad 03) al diseño desde cero de uno complejo (Actividad 04 y 05)? ¿Por qué?
 
 ❓5. Comentario adicional: ¿Hay algo más que te gustaría compartir sobre tu proceso de aprendizaje en esta unidad? ¿Algún momento de frustración o de “¡Aha!” que quieras destacar?
+
