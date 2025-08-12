@@ -42,15 +42,23 @@ Empece con algo simple, solo el estado de configuracion y que mostrara el tiempo
 
 Creo que se podria aplicar en un juego tipo Bop It (parecido a Simon dice), donde el jugador debe reaccionar rapidamente a diferentes ordenes que cambian segun el estado del juego. Tambien en un videojuego con enemigos que patrullan y dependiendo de lo que ocurra cambian su comportamiento para atacar, perseguir o retirarse. La maquina de estados ayudaria a organizar y controlar de forma clara las transiciones y acciones segun lo que pase en cada momento
 
-### 📚 Actividad 09 - Feedback   
+### 📚 Actividad 08 - Feedback   
 ❓1. Continuar: ¿Qué actividad, explicación o ejemplo de esta unidad te ayudó más a entender el poder de las máquinas de estados? ¿Qué elemento consideras que es indispensable y debería mantener?
+
+La actividad que mas me sirvio fue la actividad 3. Lo que considero importante y que deberia de mantenerse son los codigos de ejemplo/referencia y la explicacion paso a paso por parte del profesor. Esos dos elementos hacen que entiendas rapido los temas de la unidad y como aplicarlos en las actividades de apply
 
 ❓2. Dejar de hacer: ¿Hubo algún paso o actividad que te pareció confuso, innecesariamente complicado o que aportó poco a tu aprendizaje? ¿Qué cambiarías o eliminarías?
 
+Lo mas confuso (aunque no deberia) fue la creacion del diagrama: tuve que modificarlo varias veces porque al llevarlo al codigo me daba cuenta de que no estaba correcto. Agregaria mas ejemplos tanto sencillos como complejos de diagramas ya completos para usar de guia
+
 ❓3. Empezar a hacer: ¿Qué te habría ayudado a entender mejor?
+
+Creo que me habria ayudado tener un ejemplo intermedio entre los mas sencillos (como el semaforo o las caritas) y la actividad más avanzada que hicimos (la bomba). Algo que mostrara varios estados y transiciones pero sin ser tan complejo, para entender bien la logica antes de pasar al ejercicio grande. Tambien hubiera sido util contar con mas diagramas de estados ya resueltos para usarlo de referencia
 
 ❓4. Ritmo y dificultad: En una escala del 1 (muy fácil) al 5 (muy difícil), ¿Cómo calificarías la dificultad de pasar del análisis de un programa (Actividad 03) al diseño desde cero de uno complejo (Actividad 04 y 05)? ¿Por qué?
 
+Califico la dificultad en un 4. Pasar del analisis de un programa al diseño desde cero fue bastante mas dificil porque hay que pensar en todos los estados, eventos y acciones, ademas traducirlo a un codigo que no choque lo uno con lo otro
+
 ❓5. Comentario adicional: ¿Hay algo más que te gustaría compartir sobre tu proceso de aprendizaje en esta unidad? ¿Algún momento de frustración o de “¡Aha!” que quieras destacar?
 
-
+Hubo momentos de frustracion sobre todo cuando sentia que el diagrama no reflejaba lo que el debia de hacer y sentia que estaba muy enrredado. Mi momento aha fue cuando corregi la condicion del if del contador y la cuenta regresiva empezo a comportarse bien
