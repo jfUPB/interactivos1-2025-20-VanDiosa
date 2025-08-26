@@ -3,7 +3,7 @@
 
 ## 🤔 Fase: Reflect
 
-### 📚 Actividad 06 - Autoevaluación   
+### 📚 Actividad 08 - Autoevaluación   
 💡Parte 1: recuperación de conocimiento (Retrieval Practice)    
 ❓ 1. Describe con tus palabras qué es una máquina de estados. ¿Cuáles son sus cuatro componentes fundamentales que has utilizado en esta unidad?
 
@@ -36,13 +36,16 @@ En esta unidad me resulto demasiado desafiante tanto el diagrama como el codigo.
 
 ❓2. Describe un error o “bug” que encontraste al implementar tu programa. ¿Cómo te ayudó pensar en términos de estados, eventos y transiciones a identificar y solucionar el problema?
 
-En la actividad 07, luego de agregar al codigo las lineas para manejar la bomba tanto con el microbit como con el teclado me salio un error, que tengo la sospecha sucede por no usar la aplicación de conexión serial. El error era "p5.WebSerial is not a constructor"
+En la actividad 07, luego de agregar al codigo las lineas para manejar la bomba tanto con el microbit como con el teclado me salio un error, que tengo la sospecha sucede por no usar la aplicación de conexión serial. El error era "p5.WebSerial is not a constructor". El error no estaba en la lógica de los estados ni en los eventos, sino en cómo estaba cargando la librería de conexión serial
 
 ❓3. El problema de la bomba era complejo. ¿Qué estrategia usaste para abordarlo? ¿Comenzaste con una versión simple y añadiste funcionalidades poco a poco?
 
-
+Si empece con una version simple. Primero implemente la logica de los estados principales (CONFIG, ARMED, EXPLODED) para ver que funcionara el cambio entre ellos    
+Luego el control desde el teclado, para bajar o subir el temporizador en CONFIG, para pasar del estado CONFIG a ARMED, para desactivar la bomba mientras esta en el estado ARMED, y para reiniciar la bomba al esta estar en EXPLODED
+Luego el contror con el microbit que fue lo mas complicado para mi
 
 ❓4. Ahora que entiendes el patrón de máquina de estados, ¿En qué otro tipo de proyecto o sistema de entretenimiento digital crees que podrías aplicarlo?
 
-En la unidad anterior mencione el juego simon dice y bob it, sigo opinando que esos dos son un buen ejemplo del como se puede aplicar, o sea, en juegos o interacciones de ese tipo donde se debe reaccionar 
+En la unidad anterior mencione juegos de interaccion rapida como Simon dice o Bop It, donde hay que reaccionar a estimulos especificos y cada accion del jugador cambia el estado del juego. Ahora pienso que tambien seria util en videojuegos narrativos con decisiones donde cada eleccion lleva al jugador a un estado distinto de la historia
+
 
