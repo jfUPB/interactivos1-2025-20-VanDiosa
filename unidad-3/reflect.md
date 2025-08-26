@@ -48,4 +48,13 @@ Luego el contror con el microbit que fue lo mas complicado para mi
 
 En la unidad anterior mencione juegos de interaccion rapida como Simon dice o Bop It, donde hay que reaccionar a estimulos especificos y cada accion del jugador cambia el estado del juego. Ahora pienso que tambien seria util en videojuegos narrativos con decisiones donde cada eleccion lleva al jugador a un estado distinto de la historia
 
+### 📚 Actividad 09 - Feedback   
+❓1. Continuar: ¿Qué actividad, explicación o ejemplo de esta unidad te ayudó más a entender el poder de las máquinas de estados? ¿Qué elemento consideras que es indispensable y debería mantener?
 
+❓2. Dejar de hacer: ¿Hubo algún paso o actividad que te pareció confuso? ¿Qué cambiarías o eliminarías?
+
+❓3. Empezar a hacer: ¿Qué te habría ayudado a entender mejor?
+
+❓4. Ritmo y dificultad: En una escala del 1 (muy fácil) al 5 (muy difícil), ¿Cómo calificarías la dificultad de pasar del análisis de un programa a diseñar y programar uno complejo? ¿Por qué?
+
+❓5. Comentario adicional: ¿Hay algo más que te gustaría compartir sobre tu proceso de aprendizaje en esta unidad? ¿Algún momento de frustración o de “¡Aha!” que quieras destacar?
