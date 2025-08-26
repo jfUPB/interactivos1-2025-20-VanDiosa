@@ -10,20 +10,24 @@
 Es un modelo de programacion que divide el codigo en:   
 + Estados (CONFIG, ARMED, EXPLODED)
 + Eventos (Presionar A, B, sacudir el microbit o presionar S, tocar el touch del microbit o presionar R)
-+ Acciones (Actualizar el display, pasar entre estados, guardar la contraseña,etc)
-+ Transiciones    
++ Acciones (Actualizar el display, pasar entre estados, guardar la contraseña,pasar de estado)
++ Transiciones (el cambio de un estado a otro segun el evento que ocurra)    
 
-Para que no se este ejecutando todo de una si no que se va cambiando entre estados segun las condiciones que se vayan presentando
+Para que no se este ejecutando todo de una si no que se va cambiando entre estados de forma organizada segun las condiciones que se vayan presentando
 
 ❓ 2. Explica por qué la técnica de máquina de estados es tan útil para gestionar la “concurrencia” (atender varios eventos y tareas “al mismo tiempo”) en un dispositivo con un solo hilo de ejecución como el micro:bit o en p5.js. ¿Qué problema soluciona en comparación con usar funciones como sleep()?
 
-El usar sleep hace que el programa se quede dormido esperando cierto tiempo, en cambio la maquina de estados esta constantemente revisando el estado en que esta y cual es el siguiente paso a ejecutar. Si se usara el sleep el codigo no podria manejar varios eventos de forma eficiente
+El usar sleep hace que el programa se quede dormido (BLOQUEA EL FLUJO) esperando cierto tiempo, en cambio la maquina de estados esta constantemente revisando el estado en que esta y cual es el siguiente paso a ejecutar SIN DETENER EL FLUJO. Si se usara el sleep el codigo no podria manejar varios eventos de forma eficiente a comparacion de la maquina de estados que trabaja eventos en paralelo
 
 ❓3. Imagina que tienes que añadir una nueva funcionalidad a la bomba: si se recibe un evento especial (por ejemplo, una combinación de botones o un comando serial) mientras la cuenta regresiva está activa, el tiempo se reduce a la mitad. ¿Cómo modificarías tu diagrama de máquina de estados para incluir este nuevo evento y acción?
 
+En el estado ARMED se tendria que añadir un nuevo evento especial, la transicion seria entre ese evento y la accion de modificar el temporizador para que el tiempo restante reduzca a la mitad. Todo eso sin salir del estado ARMED
+
 ❓ 4. Explica qué es un “vector de prueba” y por qué es una herramienta crucial para verificar que una máquina de estados funciona como se espera.
 
-Un vector de prueba es una lista o tabla que se crea para revisar que el programa este funcionando bien, se divide el codigo estados y se escriben los eventos que se deben hacer y las acciones que se esperan obtener
+Un vector de prueba es una lista o tabla que se crea para revisar que el programa este funcionando bien, se divide en los estados del programa y se escriben los eventos que ocurren y las acciones que se esperan obtener por cada uno de los estados
+
+Es crucial pq podemos detectar errores y verificar que la maquina de estados tenga la logica completa
 
 💡Parte 2: reflexión sobre tu proceso (Metacognición)    
 ❓1. ¿Qué parte del diseño de la bomba te resultó más desafiante: crear el diagrama de estados o traducir ese diagrama a código? ¿Por qué?   
@@ -41,3 +45,4 @@ En la actividad 07, luego de agregar al codigo las lineas para manejar la bomba 
 ❓4. Ahora que entiendes el patrón de máquina de estados, ¿En qué otro tipo de proyecto o sistema de entretenimiento digital crees que podrías aplicarlo?
 
 En la unidad anterior mencione el juego simon dice y bob it, sigo opinando que esos dos son un buen ejemplo del como se puede aplicar, o sea, en juegos o interacciones de ese tipo donde se debe reaccionar 
+
