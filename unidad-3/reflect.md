@@ -51,7 +51,7 @@ En la unidad anterior mencione juegos de interaccion rapida como Simon dice o Bo
 ### 📚 Actividad 09 - Feedback   
 ❓1. Continuar: ¿Qué actividad, explicación o ejemplo de esta unidad te ayudó más a entender el poder de las máquinas de estados? ¿Qué elemento consideras que es indispensable y debería mantener?
 
-Me gusto que siguieramos usando los codigos de la unidad anterior y tmb me gustaron los espacios donde nos plantean la estructura del codigo al que debemos de llegar
+Me gusto que siguieramos usando los codigos de la unidad anterior. Tambien me gusto mucho cuando nos muestran la estructura del codigo hacia la que debemos llegar, ya que sirve como guia
 
 ❓2. Dejar de hacer: ¿Hubo algún paso o actividad que te pareció confuso? ¿Qué cambiarías o eliminarías?
 
@@ -65,5 +65,7 @@ Me habria ayudado tener una seccion de puros graficos de maquinas de estado, ade
 
 En mi caso personal senti esta unidad como un 4, el pasar de diseñar a programar no es complejo lo que es complejo es conocer funciones y sintaxis que me pueda ser util en cada caso en particular
 
-❓5. Comentario adicional: ¿Hay algo más que te gustaría compartir sobre tu proceso de aprendizaje en esta unidad? ¿Algún momento de frustración o de “¡Aha!” que quieras destacar?
+❓5. Comentario adicional: ¿Hay algo más que te gustaría compartir sobre tu proceso de aprendizaje en esta unidad? ¿Algún momento de frustración o de “¡Aha!” que quieras destacar?    
+
+Mi mayor frustracion fue el bug de "p5.WebSerial is not a constructor" ya que por mas q repetia y borraba lo de la libreria que se debia de añadir, seguia apareciendo... al final ni supe como quite ese error. Y el momento aha fue ver como los cambios al codigo de microbit a p5 fueron poquitos pq se escribia casi que igual
 
