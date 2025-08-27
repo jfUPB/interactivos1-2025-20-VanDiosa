@@ -51,10 +51,19 @@ En la unidad anterior mencione juegos de interaccion rapida como Simon dice o Bo
 ### 📚 Actividad 09 - Feedback   
 ❓1. Continuar: ¿Qué actividad, explicación o ejemplo de esta unidad te ayudó más a entender el poder de las máquinas de estados? ¿Qué elemento consideras que es indispensable y debería mantener?
 
+Me gusto que siguieramos usando los codigos de la unidad anterior y tmb me gustaron los espacios donde nos plantean la estructura del codigo al que debemos de llegar
+
 ❓2. Dejar de hacer: ¿Hubo algún paso o actividad que te pareció confuso? ¿Qué cambiarías o eliminarías?
+
+En esta unidad en especifico lo que mas confuso me parecio fue como hacer que el p5 se manejara tanto por teclado como por el microbit. Ademas de que sigo sin entender completamente la manera adecuada de hacer los graficos de las maquinas de estado, siento que el de esta unidad lo sature demasiado 
 
 ❓3. Empezar a hacer: ¿Qué te habría ayudado a entender mejor?
 
+Me habria ayudado tener una seccion de puros graficos de maquinas de estado, ademas de un ejercicio mas explicito para el manejo del p5 desde microbit
+
 ❓4. Ritmo y dificultad: En una escala del 1 (muy fácil) al 5 (muy difícil), ¿Cómo calificarías la dificultad de pasar del análisis de un programa a diseñar y programar uno complejo? ¿Por qué?
 
+En mi caso personal senti esta unidad como un 4, el pasar de diseñar a programar no es complejo lo que es complejo es conocer funciones y sintaxis que me pueda ser util en cada caso en particular
+
 ❓5. Comentario adicional: ¿Hay algo más que te gustaría compartir sobre tu proceso de aprendizaje en esta unidad? ¿Algún momento de frustración o de “¡Aha!” que quieras destacar?
+
