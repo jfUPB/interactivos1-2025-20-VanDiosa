@@ -90,6 +90,8 @@ function keyReleased() {
 Código modificado:
 
 ``` js
+'use strict';
+
 // ======================VARIABLES GLOBALES======================
 
 var strokeColor; // vrble para el color de la linea
@@ -242,6 +244,7 @@ function keyReleased() { // se ejecuta cuando una tecla es liberada
 ## Video
 
 [Video demostratativo](URL)
+
 
 
 
