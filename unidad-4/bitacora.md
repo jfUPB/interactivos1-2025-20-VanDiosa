@@ -90,6 +90,16 @@ function keyReleased() {
 Código modificado:
 
 ``` js
+/**
+ACELERÓMETRO
+ En x: Radio o tamaño de la figura
+ En y: # de lados de la figura
+ 
+BOTONES
+ A: Funciona como el click izq, se usa para dibujar
+ B: Si se mantiene presionado, el color base (que era negro) se cambia a color azul. Luego del primer cambio a azul, mientras el boton este libre el color de las lineas sera amarillo
+*/
+
 'use strict';
 
 // ======================VARIABLES GLOBALES======================
@@ -209,7 +219,7 @@ function draw() {  //se ejecuta continuamente
           vertex(x, y); // +1 vertice
         }
         endShape(); // termina de dibujar forma
-
+cl
         pop(); // restaura el estado del lienzo guardado
       }
       break;
@@ -244,6 +254,7 @@ function keyReleased() { // se ejecuta cuando una tecla es liberada
 ## Video
 
 [Video demostratativo](URL)
+
 
 
 
