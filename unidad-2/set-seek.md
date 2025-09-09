@@ -1,6 +1,6 @@
 # Unidad 2
 
-## 🔎 Fase: Set + Seek
+## 🔎 Fase: Set + Seek  
 
 ### 📚 Actividad 01 - Analizando un programa con una máquina de estados simple
 ❓Describe detalladamente cómo funciona este ejemplo.    
