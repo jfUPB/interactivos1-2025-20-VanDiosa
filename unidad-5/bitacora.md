@@ -90,5 +90,40 @@ Para ambos al final se actualizan las variables prevmicroBitAState y prevmicroBi
 
 
 ## 🔎 Fase: Seek
-### 📚Actividad 02
+### 📚Actividad 02    
+🧐🧪✍️Experimento 1: Mostrar datos como: Texto
+<img width="1221" height="783" alt="Experimento1" src="https://github.com/user-attachments/assets/4eee7e8f-96bb-4e73-8879-16c489990926" />
+
+❓¿Por qué se ve este resultado?    
+R/ Porque ya no estamos usando ASCII si no formato binario para empaquetar los datos y el programa no logra como interpretar los datos que recibe en terminos de letras entonces usa simbolos y caracteres raros
+
+🧐🧪✍️Experimento 2: Mostrar datos como: Todo en Hex
+<img width="1215" height="805" alt="Experimento2" src="https://github.com/user-attachments/assets/70d32962-9057-4e11-be33-a46d435a775a" />
+
+❓¿Cómo está relacionado con esta línea de código?
+```js
+data = struct.pack('>2h2B', xValue, yValue, int(aState), int(bState))
+```
+No te parece que el resultado es un poco más difícil de leer que el texto en ASCII?  
+
+R/ Ahora los simbolos confusos de antes son un poco mas claros. Se esta relacionado con la linea de codigo, ya que alli estamos usando el formado ">2h2B", en este formado se nos explico que cada dato de X y Y value envia 2 bytes cada uno, y los datos de los botones envia 1 byte cada uno, para un total de 6 bytes por paquete, lo cual se evidencia en la captura de pantalla
+
+Por otro lado en cuanto a dificultad de leer comparandolo con ASCII, considero que si es mas dificil, ya que el ascii lo podiamos leer o interpretar con ayuda de una tablita pero el binario a pesar de enviar los datos de forma mas compacta no lo podemos interpretar con la misma facilidad si no que necesitamos como un programa adicional q nos lo traduzca
+
+🧐🧪✍️ ¿Qué ventajas y desventajas ves en usar un formato binario en lugar de texto en ASCII?
+
+R/ En cuanto a ventajas: como lo mencione anteriormente el binario es mas corto, mas compacto, mas eficiente pq no estamos enviando unas cadenas largas de texto si no solo 6 bytes. Ademas como nos mencionan en la explicacion es mas rapido y estrategico usar este formato cuando se necesitan transmitir muchos datos
+
+En cuanto a desventajas: la principal como lo mencione tambien anteriormente, es que no los podemos leer por nosotros mismo, necesitamos la ayuda de otro programa q los procese e interprete por nosotros
+
+🧐🧪✍️Experimento 3: (Lo puse en HEX)    
+<img width="1138" height="747" alt="Experimento3" src="https://github.com/user-attachments/assets/1659cba8-ca50-4a50-a316-13eb63a97c5d" />
+
+¿Cuántos bytes se están enviando por mensaje? ¿Cómo se relaciona esto con el formato '>2h2B'? ¿Qué significa cada uno de los bytes que se envían?
+
+R/  Se siguen enviando 6 bytes, la diferencia es q no se estan enviando constantemente si no solamente cuando se detecta q se sacude el microbit (shake). Se relaciona con el formaro ">2h2B" pq el numero de bytes siguen coincidiendo con los datos, para xValue, yValue: 2 bytes cada uno (4 bytes), aState y bState: 1 byte cada uno (+2 bytes, 6 en total)
+
+🧐🧪✍️ Recuerda de la unidad anterior que es posible enviar números positivos y negativos para los valores de xValue y yValue. ¿Cómo se verían esos números en el formato '>2h2B'?    
+
 ### 📚Actividad 03
+
