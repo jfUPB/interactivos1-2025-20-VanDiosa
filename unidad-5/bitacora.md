@@ -39,7 +39,6 @@ if (port.availableBytes() > 0) {
         }
       }
     }
-  }
 ```
 + port.readUntil("\n") -> es para por paquetes, teniendo en cuenta que cada paquete termina al encontrar un salto de linea
 + data.split(",") -> separa los valores recibidos por comas
@@ -125,5 +124,9 @@ R/  Se siguen enviando 6 bytes, la diferencia es q no se estan enviando constant
 
 🧐🧪✍️ Recuerda de la unidad anterior que es posible enviar números positivos y negativos para los valores de xValue y yValue. ¿Cómo se verían esos números en el formato '>2h2B'?    
 
+🧐🧪✍️ Experimento 4:   
+¿Qué diferencias ves entre los datos en ASCII y en binario? ¿Qué ventajas y desventajas ves en usar un formato binario en lugar de texto en ASCII? ¿Qué ventajas y desventajas ves en usar un formato ASCII en lugar de binario?
+
 ### 📚Actividad 03
+
 
