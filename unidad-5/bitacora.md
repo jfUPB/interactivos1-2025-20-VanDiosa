@@ -12,7 +12,7 @@ El microbit y p5 se comunican usando un puerto serial por USB. El microbit envia
 + bState: si el boton B esta presionado (True o False)
 
 ❓¿Cómo es la estructura del protocolo ASCII usado?    
-El microbit envia los datos como texto en formato ASCII, separados por comas y terminados en salto de linea:
+El microbit envia los datos como texto en formato ASCII, separados por comas y terminados en salto de linea
 ```
 data = "{},{},{},{}\n".format(xValue, yValue, aState,bState)
 ```
@@ -40,12 +40,13 @@ if (port.availableBytes() > 0) {
       }
     }
 ```
-+ port.readUntil("\n") -> es para por paquetes, teniendo en cuenta que cada paquete termina al encontrar un salto de linea
++ port.readUntil("\n") -> es para leer por paquetes, teniendo en cuenta que cada paquete termina al encontrar un salto de linea
++ data.trim() -> limpia espacios en blanco o saltos de linea sobrantes
 + data.split(",") -> separa los valores recibidos por comas
 
 Tenemos un arreglo para almacenar los datos enviados por el microbit:    
-+ values[0] y values[1] -> son enteros y pasan de ser xValue, yValue a ser microBitX, microBitY estos dos se estan dividiendo por 2 para que queden centrados en el canva
-+ values[2] y values[3] -> son convertidos en booleanos (true/false) y representan si los botones estan o no presionados
++ values[0] y values[1] -> convierte los valores de xValue, yValue en enteros, los centra en el canva y los almacena en la cadena
++ values[2] y values[3] -> convierte los textos en booleanos (true/false) q representan si los botones estan o no presionados
 
 ❓¿Cómo se generan los eventos A pressed y B released que se generan en p5.js a partir de los datos que envía el micro:bit?     
 Estos eventos suceden en la siguiente funcion:    
@@ -128,5 +129,6 @@ R/  Se siguen enviando 6 bytes, la diferencia es q no se estan enviando constant
 ¿Qué diferencias ves entre los datos en ASCII y en binario? ¿Qué ventajas y desventajas ves en usar un formato binario en lugar de texto en ASCII? ¿Qué ventajas y desventajas ves en usar un formato ASCII en lugar de binario?
 
 ### 📚Actividad 03
+
 
 
