@@ -308,13 +308,15 @@ function readSerialData() {
 let packet = serialBuffer.slice(0, 8);
 serialBuffer.splice(0, 8);
 ```
-✏️R/ 
+✏️R/  slice copia una parte del arreglo sin modificar el original (en este caso, los primeros 8 bytes q forman un paquete). splice si elimina esos bytes del buffer original. Se usan juntas porque primero necesitamos copiar el paquete completo y luego quitarlo del buffer para no volverlo a procesar
 
 + A la siguiente parte del código se le conoce como programación funcional ¿Cómo opera la función reduce?
 ```js
 let computedChecksum = dataBytes.reduce((acc, val) => acc + val, 0) % 256;
 ```
-✏️R/ 
+✏️R/ reduce recorre todos los elementos de un arreglo y acumula un resultado. Aquí suma todos los bytes (val) empezando desde 0 (acc), y al final se aplica % 256 para quedarse con el residuo de la división. Ese valor es el checksum calculado
+
+Ejemplo de reduce: [5, 7, 3] → 5 + 7 + 3 = 15.
 
 + ¿Por qué se compara el checksum enviado con el calculado? ¿Para qué sirve esto?
 ```js
@@ -327,14 +329,14 @@ if (computedChecksum !== receivedChecksum) {
 
 + En el código anterior qué hace la instrucción continue? ¿Por qué?
 
-✏️R/ 
+✏️R/ Hace q el ciclo while salte inmediatamente a la siguiente iteracion, sin ejecutar lo q queda de codigo en ese paquete. Se usa aqui porque si hay error de checksum no tiene sentido seguir procesando ese paquete corrupto
 
 + ¿Qué es un DataView? ¿Para qué se usa?
 ```js
 let buffer = new Uint8Array(dataBytes).buffer;
 let view = new DataView(buffer);
 ```
-✏️R/ 
+✏️R/  Se usa para interpretar los bytes del buffer en el tipo de dato correcto (enteros, flotantes, con o sin signo). Permite leer directamente valores binarios como numeros, sin necesidad de convertir cadenas de texto. Ejemplo: con getInt16(0) se obtiene el número 500 partienod de dos bytes
 
 + ¿Por qué es necesario hacer estas conversiones y no simplemente se toman tal cual los datos del buffer?
 ```js
@@ -343,9 +345,11 @@ microBitY = view.getInt16(2) + windowHeight / 2;
 microBitAState = view.getUint8(4) === 1;
 microBitBState = view.getUint8(5) === 1;
 ```
-✏️R/ 
+✏️R/ Porque los datos viajan como bytes crudos. Por ejemplo, el número 500 no se manda como un solo valor, sino como dos bytes [244, 1]. Si los lees directo del buffer solo verías esos dos números separados. Con DataView.getInt16(0) los unes e interpretas como el número real 500     
+Igual pasa con los botones: getUint8 los interpreta como 0 o 1 (apagado/encendido)
 
 ## 📝 Rubrica - Autoevaluacion
+
 
 
 
