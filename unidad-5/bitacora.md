@@ -350,6 +350,17 @@ Igual pasa con los botones: getUint8 los interpreta como 0 o 1 (apagado/encendid
 
 ## 📝 Rubrica - Autoevaluacion
 
+| **Criterio** | **Nivel alcanzado** | **Justificación** |
+| --- | --- | --- |
+| **1. Profundidad de la indagación** | Logrado (raspado) | Formule preguntas sobre q es el framing, el checksum, el header y el modulo 256. Esto muestra q fui mas alla de ejecutar el codigo, aunque no siempre indague en escenarios mas avanzados. |
+| **2. Calidad de la experimentación** | En desarrollo (casi logrado) | Documente errores como cuando windowWidth y windowHeight aparecian no definidos, y cuando olvide poner readSerialData() en draw. Esas pruebas basicas me permitieron corregir y validar el funcionamiento, pero no llegue a disenar experimentos adicionales para forzar errores mas complejos |
+| **3. Análisis y reflexión** | Logrado |  |
+| **4. Apropiación y articulación de conceptos** | Logrado |  |
+
+⭐Nota final propuesta: **4.0 / 5.0**
+
+
+
 
 
 
