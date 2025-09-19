@@ -83,6 +83,10 @@ En esta parte del codigo se compara el estado actual de cada boton con su estado
 Para ambos al final se actualizan las variables prevmicroBitAState y prevmicroBitBState para que en la siguiente lectura el sistema pueda detectar si hubo un cambio o no
 
 ❓Capturas de pantalla de algunos dibujos que hayas hecho con el sketch.
+
+Captura 1:
+
+<a name="cp1"></a>
 <img width="1538" height="965" alt="20250910_145237" src="https://github.com/user-attachments/assets/e80db79e-0689-41cd-83e7-a9655abd3108" />
 
 <img width="1538" height="965" alt="20250910_153121" src="https://github.com/user-attachments/assets/5132d99c-d814-4e2e-85ef-aec8fc5dce7a" />
@@ -348,7 +352,7 @@ microBitBState = view.getUint8(5) === 1;
 ✏️R/ Porque los datos viajan como bytes crudos. Por ejemplo, el número 500 no se manda como un solo valor, sino como dos bytes [244, 1]. Si los lees directo del buffer solo verías esos dos números separados. Con DataView.getInt16(0) los unes e interpretas como el número real 500     
 Igual pasa con los botones: getUint8 los interpreta como 0 o 1 (apagado/encendido)
 
-## 📝 Rubrica - Autoevaluacion
+## 📝 Rubrica - Autoevaluacion 1
 
 | **Criterio** | **Nivel alcanzado** | **Justificación** |
 | --- | --- | --- |
@@ -359,6 +363,18 @@ Igual pasa con los botones: getUint8 los interpreta como 0 o 1 (apagado/encendid
 
 ⭐Nota final propuesta: **4.0 / 5.0**
 
+Mejora:
+
+## 📝 Rubrica - Autoevaluacion 2
+
+| **Criterio** | **Nivel alcanzado** | **Justificación** |
+| --- | --- | --- |
+| **1. Profundidad de la indagación** | Logrado (3.5 - 4.4) | Formule preguntas sobre q es el framing, el checksum, el header y el modulo 256. Esto puede mostar q fui un poco mas alla de ejecutar el codigo, aunque no indague en escenarios mas avanzados. [Ejemplo](#cp1) |
+| **2. Calidad de la experimentación** | En desarrollo (2.0 - 3.4) | Documente errores como cuando windowWidth y windowHeight aparecian no definidos, y cuando olvide poner readSerialData() en draw. Esas pruebas basicas me permitieron corregir y validar el funcionamiento, pero no llegue a diseñar experimentos adicionales para forzar errores mas complejos |
+| **3. Análisis y reflexión** | Logrado (3.5 - 4.4) | Use las capturas de la terminal y los ejemplos de paquetes para ver q pasaba con los datos. Explique como el header  y el checksum ayudan a detectar errores y mantener los datos en orden. Tambien describi los problemas qencontre y lo q aprendi |
+| **4. Apropiación y articulación de conceptos** | Logrado (3.5 - 4.4) | Entendi para q sirve cada parte del protocolo: DataView para leer los datos, slice y splice para separarlos, el header para saber donde empieza cada paquete y el checksum para comprobar que llego todo bien. Busque y use ejemplos para comprender mejor y me detuve el tiempo necesario hasta entender cada concepto antes de pasar al siguiente |
+
+⭐Nota final propuesta: **4.0 / 5.0**
 
 
 
