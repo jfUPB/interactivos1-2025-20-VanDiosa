@@ -200,12 +200,49 @@ El checksum es el residuo de la operacion modulo (la division) de: la suma de lo
 ## 🔎 Fase: Apply
 
 ### 📚Actividad 04
+⭐ Esta es la [aplicacion de la unidad anterior](https://editor.p5js.org/VanDiosa/sketches/NWrL9_nN1) la cual recibe datos en formato ASCII
+
+🛠️ Proceso de construcción    
+Parti del codigo base de la unidad anterior, que recibia los datos en formato texto (ASCII) separados por comas y use como referencia el codigo del caso de estudio de la actividad 3, donde ya se habia trabajado con binarios, y lo adapte a mi aplicacion
+
+Implemente un buffer de recepcion donde se acumulan los bytes del puerto serial y se extraen los paquetes completos de 8 bytes (1 header + 6 datos + 1 checksum)
+
+Tambien agregue la funcion readSerialData(), donde se encuentra toda la logica para:
++ detectar el header
++ separar los datos del acelerometro y botones (A y B)
++ calcular el checjsum y verificar los datos
++ actualizar las variables microBitX, microBitY, microBitAState y microBitBState
+
+Y adicional en la funcion draw() añadi el llamado a la funcion antes mencionada (readSerialData()) para que asi se procese continuamente los datos q van entrando 
+
+⁉️Errores y soluciones
+<img width="606" height="283" alt="error1" src="https://github.com/user-attachments/assets/1230a469-59b2-4082-bc37-87cf60c4609a" />
+
++ Error 1: En la primera version peque por confiada y dentro de readSerialData() usé:
+```js
+microBitX = view.getInt16(0) + windowWidth / 2;
+microBitY = view.getInt16(2) + windowHeight / 2;
+```
+El problema fue que en mi codigo el lienzo era fijo (createCanvas(720, 720)), mientras que en el caso de estudio se usaba windowResized() con windowWidth y windowHeight. Como esas variables no existian en mi caso, aparecia el error de que no estaban definidas.
+
+Solucion: Elimine la suma de windowWidth / 2 y windowHeight / 2 ya que no eran necesarias
+
++ Error 2: Al ejecutar despues de esa correccion, aun no se dibujaba nada. Revisando el codigo compare detalladamente con el ejemplo de la actividad 3 y me di cuenta de que me faltaba llamar a la funcion readSerialData(); dentro de draw().
+  
+Solucion: Añadi la llamada, volvi a ejecutar y ya funciono correctamente
+
+⭐ Esta es la [aplicacion MODIFICADA](https://editor.p5js.org/VanDiosa/sketches/KsvkXDJR8) la cual recibe datos en formato binario
+
+En general esta actividad se me hizo mas facil, puesto que era mas que todo comprender la actividad 3 y saber que codigo usar de esa en el caso particular de cada uno.
+
+Aunque no alcance a realizar multiples experimentos adicionales por temas de tiempo, pude comprobar el funcionamiento basico y confiable de la aplicacion
 
 ## 🔎 Fase: Reflect
 
 ### 📚Actividad 05
 
 ## 📝 Rubrica - Autoevaluacion
+
 
 
 
