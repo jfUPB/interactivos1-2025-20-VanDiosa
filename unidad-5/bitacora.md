@@ -277,7 +277,7 @@ function readSerialData() {
         serialBuffer = serialBuffer.concat(newData);
     }
 ```
-R/ 
+✏️R/ Une dos o mas arreglos. En este caso, al leer nuevos bytes con port.readBytes(available), esos bytes se van agregando al final del serialBuffer con serialBuffer.concat(newData). Esto es necesario porque los datos pueden llegar por partes, y se van acumulando en el buffer hasta tener un paquete completo
 
 + En la función readSerialData() tenemos un bucle que recorre el buffer solo si este tiene 8 o más bytes ¿Por qué?
 ```js
@@ -295,6 +295,8 @@ R/
 
 + En el código anterior qué hace la función shift y la instrucción continue? ¿Por qué?
 
+✏️R/ En caso de que el primer byte no sea el header shift lo elimina del arreglo (serialBuffer[0]) y continue hace que el bucle vuelva a empezar sin ejecutar el resto del codigo, esto se hace para seguir buscando el inicio correcte de un paquete
+
 + Si hay menos de 8 bytes qué hace la instrucción break? ¿Por qué?
 ```js
     if (serialBuffer.length < 8) break;
@@ -306,11 +308,13 @@ R/
 let packet = serialBuffer.slice(0, 8);
 serialBuffer.splice(0, 8);
 ```
+✏️R/ 
 
 + A la siguiente parte del código se le conoce como programación funcional ¿Cómo opera la función reduce?
 ```js
 let computedChecksum = dataBytes.reduce((acc, val) => acc + val, 0) % 256;
 ```
+✏️R/ 
 
 + ¿Por qué se compara el checksum enviado con el calculado? ¿Para qué sirve esto?
 ```js
@@ -323,11 +327,14 @@ if (computedChecksum !== receivedChecksum) {
 
 + En el código anterior qué hace la instrucción continue? ¿Por qué?
 
+✏️R/ 
+
 + ¿Qué es un DataView? ¿Para qué se usa?
 ```js
 let buffer = new Uint8Array(dataBytes).buffer;
 let view = new DataView(buffer);
 ```
+✏️R/ 
 
 + ¿Por qué es necesario hacer estas conversiones y no simplemente se toman tal cual los datos del buffer?
 ```js
@@ -336,8 +343,10 @@ microBitY = view.getInt16(2) + windowHeight / 2;
 microBitAState = view.getUint8(4) === 1;
 microBitBState = view.getUint8(5) === 1;
 ```
+✏️R/ 
 
 ## 📝 Rubrica - Autoevaluacion
+
 
 
 
