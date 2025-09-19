@@ -267,8 +267,78 @@ Ej: Si los datos son: 01 F4 02 0C 01 00
 → módulo 256 = 4   
 Ese 04 es el checksum que se pone al final   
 
+⁉️6. En la función readSerialData() del programa en p5.js:
++ ¿Qué hace la función concat? ¿Por qué?
+```js
+function readSerialData() {
+    let available = port.availableBytes();
+    if (available > 0) {
+        let newData = port.readBytes(available);
+        serialBuffer = serialBuffer.concat(newData);
+    }
+```
+R/ 
+
++ En la función readSerialData() tenemos un bucle que recorre el buffer solo si este tiene 8 o más bytes ¿Por qué?
+```js
+  while (serialBuffer.length >= 8) {
+    if (serialBuffer[0] !== 0xaa) {
+      serialBuffer.shift();
+      continue;
+    }
+```
+✏️R/ Porque un paquete completo en el protocolo que creamos ocupa exactamente 8 bytes (1 de header + 6 de datos + 1 de checksum). Si el buffer tiene menos de 8, no alcanza para armar un paquete valido, entonces no se procesaria todavia
+ 
++ En el código anterior qué significa 0xaa?    
+
+✏️R/ Es un numero hexadecimal (equivale a 170 en decimal). Es el caracter de sincronizacion o header, usado para identificar el inicio de cada paquete
+
++ En el código anterior qué hace la función shift y la instrucción continue? ¿Por qué?
+
++ Si hay menos de 8 bytes qué hace la instrucción break? ¿Por qué?
+```js
+    if (serialBuffer.length < 8) break;
+```
+✏️R/ break detiene el bucle while. Se usa porque ya no hay suficientes bytes para formar un paquete completo. En lugar de seguir procesando datos incompletos, se espera a que lleguen mas en la siguiente lectura
+
++ ¿Cuál es la diferencia entre slice y splice? ¿Por qué se usa splice justo después de slice?
+```js
+let packet = serialBuffer.slice(0, 8);
+serialBuffer.splice(0, 8);
+```
+
++ A la siguiente parte del código se le conoce como programación funcional ¿Cómo opera la función reduce?
+```js
+let computedChecksum = dataBytes.reduce((acc, val) => acc + val, 0) % 256;
+```
+
++ ¿Por qué se compara el checksum enviado con el calculado? ¿Para qué sirve esto?
+```js
+if (computedChecksum !== receivedChecksum) {
+    console.log("Checksum error in packet");
+    continue;
+}
+```
+✏️R/ Para verificar que los datos no se corrompieron durante la transmision. Si coinciden → el paquete esta bien y se procesa. Si no coinciden → significa que hubo un error en la comunicacion y el paquete se descarta
+
++ En el código anterior qué hace la instrucción continue? ¿Por qué?
+
++ ¿Qué es un DataView? ¿Para qué se usa?
+```js
+let buffer = new Uint8Array(dataBytes).buffer;
+let view = new DataView(buffer);
+```
+
++ ¿Por qué es necesario hacer estas conversiones y no simplemente se toman tal cual los datos del buffer?
+```js
+microBitX = view.getInt16(0) + windowWidth / 2;
+microBitY = view.getInt16(2) + windowHeight / 2;
+microBitAState = view.getUint8(4) === 1;
+microBitBState = view.getUint8(5) === 1;
+```
 
 ## 📝 Rubrica - Autoevaluacion
+
 
 
 
