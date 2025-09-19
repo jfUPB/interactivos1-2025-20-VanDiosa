@@ -4,6 +4,8 @@
 ## 🔎 Fase: Set
 
 ### 📚Actividad 01
+⭐ Para tenerlo a la mano, [este es el codigo](https://editor.p5js.org/VanDiosa/sketches/NWrL9_nN1) del caso de estudio usado en esta actividad
+
 ❓Describe cómo se están comunicando el micro:bit y el sketch de p5.js. ¿Qué datos envía el micro:bit?    
 El microbit y p5 se comunican usando un puerto serial por USB. El microbit envia estos datos:
 + xValue: valor del acelerometro en el eje X
@@ -147,6 +149,53 @@ ASCII:
 + Desvenajas: mas espacio ocupado y mas lento en procesos con volumentes altos de datos
 
 ### 📚Actividad 03
+⭐ Para tenerlo a la mano, [este es el codigo](https://editor.p5js.org/VanDiosa/sketches/iD2vSmtOl) del caso de estudio modificado en esta actividad
+
+🧐🧪✍️ Explica por qué en la unidad anterior teníamos que enviar la información delimitada y además marcada con un salto de línea y ahora no es necesario.
+
+R/ En la unidad anterior estabamos usando el formato ASCII y era necesario delimitar cada paquete usando \n pq cada mensaje variaba segun la cantidadad de digitos que tuviera cada numero. Por ejemplo uno de los numeros podria ser 19 y alli se ocuparian 2 bytes, o podria ser -1234 y alli se ocuparian 5 bytes. Al delimitar correctamente los paquetes p5 podia reconocer donde empezaban y terminaban para separar los datos en sus respectivos paquetes
+
+Ahora no es necesario pq estamos usando el formato binario donde cada paquete tiene un tamaño fijo de 6 bytes, 2 para xvalue, 2 para yvalue, y 1 para cada boton (aState y bState). Al ser tamaño fijo ya no es necesario usar limitadores pq p5 simplemente sabe que cada 6 bytes es un paquete completo
+
+🧐🧪✍️ Compara el código de la unidad anterior relacionado con la recepción de los datos seriales que ves ahora. ¿Qué cambios observas?
+
+R/ En la unidad anterior, el codigo recibia datos en formato de texto o ASCII. Se usaba el port.readUntil("\n").split(",") para leer hasta encontrar un salto de linea y luego separar esos datos con comas. Despues esos datos eran convertidos a numeros o valores booleanos
+```js
+let values = port.readUntil("\n").split(",");
+microBitX = int(values[0]) + windowWidth / 2;
+microBitY = int(values[1]) + windowHeight / 2;
+microBitAState = values[2].toLowerCase() === "true";
+microBitBState = values[3].toLowerCase() === "true";
+```
+
+En esta unidad, el codigo directamente lee bytes usando port.readBytes(6). Esos bytes los interpreta y convierte en un arreglo/array usando DataView
+```js
+let data = port.readBytes(6);
+const buffer = new Uint8Array(data).buffer;
+const view = new DataView(buffer);
+
+microBitX = view.getInt16(0); // getInt16 -> numeor entero con signo
+microBitY = view.getInt16(2);
+microBitAState = view.getUint8(4) === 1; // getUint8 -> numero entero sin signo
+microBitBState = view.getUint8(5) === 1;
+```
+
+🧐🧪✍️ REPRODUCIENDO UN ERROR: ¿Qué ves en la consola? ¿Por qué crees que se produce este error?
+
+R/ Al inicio se observan datos como correctos y logicos, pero luego empiezan a aparecer valores raros. Lo q creo es que hay un error en la lectura, una desincronizacion, que se mezclan bytes, ya que los datos se estan entregando continuamente
+
+🧐🧪✍️ IMPLEMENTANDO EL FRAMING: Analiza el código, observa los cambios. Ejecuta y luego observa la consola. ¿Qué ves?
+
+R/ El framing sirve para asegurar que p5 identifique el inicio y el fin de cada paquete, y que los datos no se desordenen. Al ejecutar el codigo la consola muestra datos claros y logicas    
+Tambien se vi mensajes de estado como “Microbit ready to draw”. Si ocurre un error en la transmision aparece “Checksum error in packet” y el paquete se descarta
+
+🧐🧪✍️ VERSIONES FINALES DE LOS PROGRAMAS: ¿Qué cambios tienen los programas y ¿Qué puedes observar en la consola del editor de p5.js?
+
+R/ En las versiones finales, por el lado del codigo del micro bit, añadimos dos bytes extras en cada paquete: un header para marcar el inicio y un checksum para validar q los datos son correctos. Asi q en lugar de 6 bytes por paquete ahora tenemos 8
+
+Por otro lado en p5, se añadio un buffer, con este buscamos el header para alinear los datos y ademas se usa para calcular el checksum para descartar paquetes
+
+El checksum es el residuo de la operacion modulo (la division) de: la suma de los datos del paquete (los 6 bytes) entre 256. Este valor debe de dar un numero entre 0 y 255
 
 ## 🔎 Fase: Apply
 
@@ -157,6 +206,7 @@ ASCII:
 ### 📚Actividad 05
 
 ## 📝 Rubrica - Autoevaluacion
+
 
 
 
