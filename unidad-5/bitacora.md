@@ -130,5 +130,14 @@ R/  Se siguen enviando 6 bytes, la diferencia es q no se estan enviando constant
 
 ### 📚Actividad 03
 
+## 🔎 Fase: Apply
+
+### 📚Actividad 04
+
+## 🔎 Fase: Reflect
+
+### 📚Actividad 05
+
+## 📝 Rubrica - Autoevaluacion
 
 
