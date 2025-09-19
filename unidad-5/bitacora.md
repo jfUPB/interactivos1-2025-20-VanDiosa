@@ -100,7 +100,7 @@ R/ Porque ya no estamos usando ASCII si no formato binario para empaquetar los d
 🧐🧪✍️Experimento 2: Mostrar datos como: Todo en Hex
 <img width="1215" height="805" alt="Experimento2" src="https://github.com/user-attachments/assets/70d32962-9057-4e11-be33-a46d435a775a" />
 
-❓¿Cómo está relacionado con esta línea de código?
+❓Lo que ves ¿Cómo está relacionado con esta línea de código?
 ```js
 data = struct.pack('>2h2B', xValue, yValue, int(aState), int(bState))
 ```
@@ -121,12 +121,30 @@ En cuanto a desventajas: la principal como lo mencione tambien anteriormente, es
 
 ¿Cuántos bytes se están enviando por mensaje? ¿Cómo se relaciona esto con el formato '>2h2B'? ¿Qué significa cada uno de los bytes que se envían?
 
-R/  Se siguen enviando 6 bytes, la diferencia es q no se estan enviando constantemente si no solamente cuando se detecta q se sacude el microbit (shake). Se relaciona con el formaro ">2h2B" pq el numero de bytes siguen coincidiendo con los datos, para xValue, yValue: 2 bytes cada uno (4 bytes), aState y bState: 1 byte cada uno (+2 bytes, 6 en total)
+R/  Se siguen enviando 6 bytes, la diferencia es q no se estan enviando constantemente si no solamente cuando se detecta q se sacude el microbit (shake). Se relaciona con el formaro ">2h2B" pq el numero de bytes sigue coincidiendo con los datos, para xValue, yValue: 2 bytes cada uno (4 bytes), aState y bState: 1 byte cada uno (+2 bytes, 6 en total)
 
 🧐🧪✍️ Recuerda de la unidad anterior que es posible enviar números positivos y negativos para los valores de xValue y yValue. ¿Cómo se verían esos números en el formato '>2h2B'?    
+R/ Por cuenta propia no tenia ni idea de como se veia los numeros negativos. Pero luego de leer y buscar, encontre que se usa algo llamado "complemento a dos". En binario un numero entero CON signo (h) puede ir de -32768 a 32767, si es positivo se escribe tal cual en binario y si es negativo es donde se usa el complento a dos.
+
+El complemento a dos, es agarrar los mismos bits del numero en positivo e invertirlos para que se entienda que tiene signo negativo. Visualmente al mostrar los datos en HEX se pueden reconocer los numeros negativos cuando empiezan por FF, FE, FD...
 
 🧐🧪✍️ Experimento 4:   
 ¿Qué diferencias ves entre los datos en ASCII y en binario? ¿Qué ventajas y desventajas ves en usar un formato binario en lugar de texto en ASCII? ¿Qué ventajas y desventajas ves en usar un formato ASCII en lugar de binario?
+
+Captura:
+<img width="1011" height="742" alt="Captura de pantalla 2025-09-17 140916" src="https://github.com/user-attachments/assets/5161f100-9be8-4154-bde2-0d8cf7f4504c" />
+
+(Los datos en binario son los representados entre este tipo de corchete [ ], y por otro lado los datos como ASCII se ven luego de los anteriores en texto legible. Nos muestran los mismos valores representados en ambos formatos)
+
+R/ Diferencias: En binario cada paquete ocupa solo 6 bytes siendo muy compacto y eficiente a comparacion de en ASCII que el tamaño de cada paquete depende de la cantidad de digitos
+
+Binario:
++ Ventajas: compacto, rapido, y eficiente especialmente en situaciones donde se procesan muchos datos
++ Desventajas: dificil de leer directamente por nosotros, se necesita si o si un programa extra q lo interprete o traduzca
+
+ASCII:
++ Ventajas: legible para los humanos sin necesidad de recurrir a otras herramientas. De verificiacion facil
++ Desvenajas: mas espacio ocupado y mas lento en procesos con volumentes altos de datos
 
 ### 📚Actividad 03
 
@@ -139,5 +157,6 @@ R/  Se siguen enviando 6 bytes, la diferencia es q no se estan enviando constant
 ### 📚Actividad 05
 
 ## 📝 Rubrica - Autoevaluacion
+
 
 
