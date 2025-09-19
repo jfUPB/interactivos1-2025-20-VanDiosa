@@ -200,7 +200,7 @@ El checksum es el residuo de la operacion modulo (la division) de: la suma de lo
 ## 🔎 Fase: Apply
 
 ### 📚Actividad 04
-⭐ Esta es la [aplicacion de la unidad anterior](https://editor.p5js.org/VanDiosa/sketches/NWrL9_nN1) la cual recibe datos en formato ASCII
+⭐ Esta es la [aplicacion de la unidad anterior](https://editor.p5js.org/VanDiosa/sketches/Gl-causBp) la cual recibe datos en formato ASCII
 
 🛠️ Proceso de construcción    
 Parti del codigo base de la unidad anterior, que recibia los datos en formato texto (ASCII) separados por comas y use como referencia el codigo del caso de estudio de la actividad 3, donde ya se habia trabajado con binarios, y lo adapte a mi aplicacion
@@ -240,8 +240,36 @@ Aunque no alcance a realizar multiples experimentos adicionales por temas de tie
 ## 🔎 Fase: Reflect
 
 ### 📚Actividad 05
+⁉️ 1. Tabla comparativa:    
+
+| Aspectos | ASCII | Binario |
+| --- | --- | --- |
+| **Eficiencia** | Poco eficiente: cada dato ocupa mas bytes de los necesarios (ej: numero 500 →  son 3 bytes) | Muy eficiente: cada dato ocupa lo justo (ej: numero 500 cabe en 2 bytes con  getInt16) |
+| **Velocidad** | Menos veloz, porque al recibir texto hay que convertir cadenas a numeros con int() y a booleanos con .toLowerCase() === "true” | Mas veloz, porque se convierten directamente como numeros o bits con DataView |
+| **Facilidad** | Mas facil de depurar: los datos se ven legibles en consola. Ej: 512,300,true,false | Mas dificil de depurar: los datos aparecen como bytes en formato binario (0–255 o HEX). Ej: 170 1 255 0 44 0 1 115 |
+| **Uso de recursos** | Mayor uso: se envian mas bytes y hay conversiones adicionales | Menor uso: se envian menos bytes y se aprovechan directamente |
+
+
+⁉️ 2. ¿Por qué fue necesario introducir framing en el protocolo binario?    
+R/ Porque en el protocolo binario los datos no tienen separadores visibles (como la coma , o el salto de linea \n en ASCII). Esto hace q p5 no sepa facilmente donde empieza y termina un paquete. El framing garantiza q los bytes se agrupen correctamente en bloques de 8 y q no se mezclen con bytes de paquetes anteriores o siguientes
+
+⁉️ 3. ¿Cómo funciona el framing?    
+R/ Funciona usando un header o byte especial al inicio de cada paquete (en nuestro caso 0xAA). p5 busca ese byte en el buffer y cuando lo encuentra, sabe q lo q sigue son los 6 datos y luego el checksum. De esta forma puede alinear la lectura de los paquetes y evitar errores de sincronizacion como los q estabamos presentando
+
+⁉️4. ¿Qué es un carácter de sincronización?    
+R/ Es ese byte especial q se coloca al inicio del paquete para marcar el comienzo. En nuestro protocolo usamos el valor 0xAA como caracter de sincronizacion. Sirve para q p5 identifique el limite entre un paquete y otro y sepa donde empezar a leer
+
+⁉️5. ¿Qué es el checksum y para qué sirve?    
+R/ Es un valor de verificacion q se calcula (antes de enviar el paquete) sumando todos los bytes de los datos (los 6 en este caso) y sacando el residuo modulo 256 (se hace una division). Ese valor se envia al final del paquete, y p5 vuelve a calcular el mismo valor con los datos recibidos y lo compara con el q venia en el paquete. Si no coinciden, significa q el paquete se corrompio durante la transmision y se descarta
+
+Ej: Si los datos son: 01 F4 02 0C 01 00   
+→ los sumas: 1 + 244 + 2 + 12 + 1 + 0 = 260   
+→ módulo 256 = 4   
+Ese 04 es el checksum que se pone al final   
+
 
 ## 📝 Rubrica - Autoevaluacion
+
 
 
 
