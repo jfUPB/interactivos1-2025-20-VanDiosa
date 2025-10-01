@@ -222,3 +222,14 @@ R/ Si funciona, pq el servidor ahora esta activo en el puerto 3001 y responde a 
   
 R/ La variable `port` define el numero de puerto donde el servidor escucha. Al cambiarla de `3000` a `3001`, el servidor dejo de atender en la direccion anterior y pasa a la nueva    
 La funcion `listen` usa esa variable para abrir la puerta de comunicacion, por eso solo funciona con la URL que coincide con el puerto configurado
+
+### 📚Actividad 04: Explorando los clientes (p5.js + Socket.IO)        
+#### 🧐🧪✍️ Experimento 1    
+
+#### 🧐🧪✍️ Experimento 2    
+
+#### 🧐🧪✍️ Experimento 3    
+
+#### 🧐🧪✍️ Experimento 4    
+
+#### 🧐🧪✍️ Experimento 5    
