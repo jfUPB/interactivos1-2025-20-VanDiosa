@@ -113,7 +113,7 @@ R/
 Apps: whatsapp web, messenger, juegos multijugador en el navegador, google docs y parecidos
 
 ### 📚Actividad 03    
-🧐🧪✍️ Experimento 1    
+#### 🧐🧪✍️ Experimento 1    
 + Detén el servidor si está corriendo. ✔️
   
 + Modificaciones al servidor: Cambia la primera ruta de /page1 a /pagina_uno. ✔️     
@@ -136,7 +136,7 @@ R/ Si funciona, como definimos la ruta como /pagina_uno esa es la URL valida del
 + ¿Qué te dice esto sobre cómo el servidor asocia URLs con respuestas? Restaura el código. ✔️    
 R/ Si la URL no coincide exactamente con la ruta que se define de manera explicita en el codigo (/page1 ≠ /pagina_uno), el servidor devuelve un error: Cannot GET /page1. O sea las respuestas dependen directamente de como esten configuradas las rutas en el servidor    
 
-🧐🧪✍️ Experimento 2  
+#### 🧐🧪✍️ Experimento 2  
 + Asegúrate de que el servidor esté corriendo (npm start). ✔️
 
 + Abre http://localhost:3000/page1 en una pestaña. Observa la terminal del servidor. ¿Qué mensaje ves? Anota el ID. ✔️
@@ -164,7 +164,7 @@ R/ El mensaje que salio fue: "User disconnected - ID: NcI86hIPvrGrjfgKAAAD", sig
 CONCLUSIÓN DEL EXPERIMENTO 2: cada conexion tiene un ID distinto (aunque sea desde el mismo computador y navegador). Cuando cerre la pestaña, el servidor detecta la desconexion y borra ese ID de su lista de clientes conectados
 
 
-🧐🧪✍️ Experimento 3  
+#### 🧐🧪✍️ Experimento 3  
 - Inicia el servidor y abre page1 y page2. ✔️
 
 - Mueve la ventana de page1. Observa la terminal del servidor. ¿Qué evento se registra (win1update o win2update)? ¿Qué datos (Data:) ves? ✔️
@@ -194,3 +194,5 @@ Codigo despues:
 
 
 R/  Cuando movi page 1 el servidor recibio el evento y lo registro en la consola (se ve win1update…), PERO esos movimientos no se ven reflejados en page 2, la informacion no le esta llegando a ese cliente. Con `socket.emit(...)` solo el cliente que mando el evento recibe su propia info, asi que no hay sincronizacien entre las paginas; en cambio con `socket.broadcast.emit(...)` page1 y page2 se sincronizan porque cada vez que uno manda datos, el servidor los envia a los demas clientes
+
+#### 🧐🧪✍️ Experimento 4  
