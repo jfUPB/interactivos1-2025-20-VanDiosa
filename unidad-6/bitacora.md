@@ -141,18 +141,25 @@ R/ Si la URL no coincide exactamente con la ruta que se define de manera explici
 
 + Abre http://localhost:3000/page1 en una pestaña. Observa la terminal del servidor. ¿Qué mensaje ves? Anota el ID. ✔️
 <img width="892" height="151" alt="Captura de pantalla 2025-10-01 135619" src="https://github.com/user-attachments/assets/b0aa5598-ef51-4e9c-88ea-ba10abc448b7" />
+R/ El mensaje que salio fue "A user connected - ID: ZYRVhlh8Rd3KyAbhAAAB", esto significa que un cliente nuevo (pestaña con page1) se conecto y se le asigno un ID unico. Ademas esa pestaña mando datos de su ventana (posicion y tamaño) y el servidor guardo esa informacion y el servidor hace un chequeo del estado (1 cliente conectado, en page1, y no esta sincronizado con nadie)
 
 + Abre http://localhost:3000/page2 en OTRA pestaña. Observa la terminal. ¿Qué mensaje ves? ¿El ID es diferente? ✔️
 <img width="899" height="195" alt="Captura de pantalla 2025-10-01 135736" src="https://github.com/user-attachments/assets/18b454e8-d8f0-44ba-9283-8e837aa43f37" />
 
-R/  ID: ZYRVhlh8Rd3KyAbhAAAB
+R/ El mensaje q salio fue: "A user connected - ID: NcI86hIPvrGrjfgKAAAD", este es un segundo cliente (otra pestaña) con su propio ID. Y ahora el servidor detecta que hay dos pestañas activas, una en page1 y otra en page2
+
+Tmb mostro "All clients are fully synced", lo que significa que ambos clientes compartieron sus datos y confirmaron sincronizacion
 
 + Cierra la pestaña de page1. Observa la terminal. ¿Qué mensaje ves? ¿Coincide el ID con el que anotaste? ✔️
 <img width="497" height="35" alt="Captura de pantalla 2025-10-01 141759" src="https://github.com/user-attachments/assets/586f51a0-e226-4d9d-ba24-b2e725ed6d1c" />
 
-R/ ID: NcI86hIPvrGrjfgKAAAD
+R/ El mensaje que salio fue: "User disconnected - ID: ZYRVhlh8Rd3KyAbhAAAB", lo que significa que el servidor detecta la desconexion y borro el ID de su lista interna
 
 + Cierra la pestaña de page2. Observa la terminal. ✔️
 <img width="502" height="34" alt="Captura de pantalla 2025-10-01 141821" src="https://github.com/user-attachments/assets/09d79c98-6902-4fb1-846a-88755d313794" />
 
+R/ El mensaje que salio fue: "User disconnected - ID: NcI86hIPvrGrjfgKAAAD", significa lo mismo q lo anterior
+
+
 CONCLUSION DEL EXPERIMENTO 2: cada conexion tiene un ID distinto (aunque sea desde el mismo computador y navegador). Cuando cerre la pestaña, el servidor detecta la desconexion y borra ese ID de su lista de clientes conectados
+
