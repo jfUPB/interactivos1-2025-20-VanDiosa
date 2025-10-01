@@ -114,12 +114,16 @@ Apps: whatsapp web, messenger, juegos multijugador en el navegador, google docs 
 
 ### 📚Actividad 03    
 🧐🧪✍️ Experimento 1    
-+ Modificaciones al servidor: Cambia la primera ruta de /page1 a /pagina_uno.    
++ Detén el servidor si está corriendo. ✔️
+  
++ Modificaciones al servidor: Cambia la primera ruta de /page1 a /pagina_uno.     
 Antes:     
 <img width="810" height="212" alt="Captura de pantalla 2025-10-01 112544" src="https://github.com/user-attachments/assets/bcbb3db1-a33d-486f-8437-b2617bf342f1" />
 
 Despues:     
 <img width="828" height="209" alt="Captura de pantalla 2025-10-01 112640" src="https://github.com/user-attachments/assets/e5f4842b-3592-4ec9-a221-216163e76173" />
+
++ Inicia el servidor. ✔️
 
 + Intenta acceder a http://localhost:3000/page1. ¿Funciona?    
 R/ No funciona, al modificar la ruta en el codigo la direccion /page1 dejo de estar definida por lo que al intentar acceder a ella no se encuentra coincidencias y responde con un error
@@ -132,4 +136,13 @@ R/ Si funciona, como definimos la ruta como /pagina_uno esa es la URL valida del
 + ¿Qué te dice esto sobre cómo el servidor asocia URLs con respuestas? Restaura el código.    
 R/ Si la URL no coincide exactamente con la ruta que se define de manera explicita en el codigo (/page1 ≠ /pagina_uno), el servidor devuelve un error: Cannot GET /page1. O sea las respuestas dependen directamente de como esten configuradas las rutas en el servidor    
 
+🧐🧪✍️ Experimento 2  
++ Asegúrate de que el servidor esté corriendo (npm start). ✔️
 
++ Abre http://localhost:3000/page1 en una pestaña. Observa la terminal del servidor. ¿Qué mensaje ves? Anota el ID.
+  
++ Abre http://localhost:3000/page2 en OTRA pestaña. Observa la terminal. ¿Qué mensaje ves? ¿El ID es diferente?
+
++ Cierra la pestaña de page1. Observa la terminal. ¿Qué mensaje ves? ¿Coincide el ID con el que anotaste?
+
++ Cierra la pestaña de page2. Observa la terminal.
