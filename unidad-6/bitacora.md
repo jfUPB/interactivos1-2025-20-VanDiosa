@@ -113,4 +113,21 @@ R/
 Apps: whatsapp web, messenger, juegos multijugador en el navegador, google docs y parecidos
 
 ### 📚Actividad 03    
+🧐🧪✍️ Experimento 1    
++ Modificaciones al servidor: Cambia la primera ruta de /page1 a /pagina_uno.    
+Antes:     
+<img width="810" height="212" alt="Captura de pantalla 2025-10-01 112544" src="https://github.com/user-attachments/assets/bcbb3db1-a33d-486f-8437-b2617bf342f1" />
 
+Despues:     
+<img width="828" height="209" alt="Captura de pantalla 2025-10-01 112640" src="https://github.com/user-attachments/assets/e5f4842b-3592-4ec9-a221-216163e76173" />
+
++ Intenta acceder a http://localhost:3000/page1. ¿Funciona?    
+R/ No, pq esa ruta ya no existe, nosotros la modificamos
+
++ Ahora intenta acceder a http://localhost:3000/pagina_uno. ¿Funciona?    
+R/ Si, pq esa es la ruta que nosotros colocamos
+
++ ¿Qué te dice esto sobre cómo el servidor asocia URLs con respuestas? Restaura el código.    
+R/ Si la URL no coincide exactamente con la ruta especificamente definida (/page1 ≠ /pagina_uno), el servidor devuelve un Cannot GET /page1    
+<img width="487" height="184" alt="Captura de pantalla 2025-10-01 112754" src="https://github.com/user-attachments/assets/d59a3715-37a4-43eb-b2c6-972b2cba35e1" />
+<img width="690" height="318" alt="Captura de pantalla 2025-10-01 112824" src="https://github.com/user-attachments/assets/eabde3bc-6e71-4c34-a788-0c48c28c9de8" />
