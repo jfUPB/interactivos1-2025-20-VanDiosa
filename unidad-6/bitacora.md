@@ -116,7 +116,7 @@ Apps: whatsapp web, messenger, juegos multijugador en el navegador, google docs 
 🧐🧪✍️ Experimento 1    
 + Detén el servidor si está corriendo. ✔️
   
-+ Modificaciones al servidor: Cambia la primera ruta de /page1 a /pagina_uno.     
++ Modificaciones al servidor: Cambia la primera ruta de /page1 a /pagina_uno. ✔️     
 Antes:     
 <img width="810" height="212" alt="Captura de pantalla 2025-10-01 112544" src="https://github.com/user-attachments/assets/bcbb3db1-a33d-486f-8437-b2617bf342f1" />
 
@@ -125,24 +125,34 @@ Despues:
 
 + Inicia el servidor. ✔️
 
-+ Intenta acceder a http://localhost:3000/page1. ¿Funciona?    
++ Intenta acceder a http://localhost:3000/page1. ¿Funciona? ✔️    
 R/ No funciona, al modificar la ruta en el codigo la direccion /page1 dejo de estar definida por lo que al intentar acceder a ella no se encuentra coincidencias y responde con un error
 <img width="487" height="184" alt="Captura de pantalla 2025-10-01 112754" src="https://github.com/user-attachments/assets/d59a3715-37a4-43eb-b2c6-972b2cba35e1" />
 
-+ Ahora intenta acceder a http://localhost:3000/pagina_uno. ¿Funciona?    
++ Ahora intenta acceder a http://localhost:3000/pagina_uno. ¿Funciona? ✔️    
 R/ Si funciona, como definimos la ruta como /pagina_uno esa es la URL valida del momento y el servidor la asocia con page1.html
 <img width="690" height="318" alt="Captura de pantalla 2025-10-01 112824" src="https://github.com/user-attachments/assets/eabde3bc-6e71-4c34-a788-0c48c28c9de8" />
 
-+ ¿Qué te dice esto sobre cómo el servidor asocia URLs con respuestas? Restaura el código.    
++ ¿Qué te dice esto sobre cómo el servidor asocia URLs con respuestas? Restaura el código. ✔️    
 R/ Si la URL no coincide exactamente con la ruta que se define de manera explicita en el codigo (/page1 ≠ /pagina_uno), el servidor devuelve un error: Cannot GET /page1. O sea las respuestas dependen directamente de como esten configuradas las rutas en el servidor    
 
 🧐🧪✍️ Experimento 2  
 + Asegúrate de que el servidor esté corriendo (npm start). ✔️
 
-+ Abre http://localhost:3000/page1 en una pestaña. Observa la terminal del servidor. ¿Qué mensaje ves? Anota el ID.
-  
-+ Abre http://localhost:3000/page2 en OTRA pestaña. Observa la terminal. ¿Qué mensaje ves? ¿El ID es diferente?
++ Abre http://localhost:3000/page1 en una pestaña. Observa la terminal del servidor. ¿Qué mensaje ves? Anota el ID. ✔️
+<img width="892" height="151" alt="Captura de pantalla 2025-10-01 135619" src="https://github.com/user-attachments/assets/b0aa5598-ef51-4e9c-88ea-ba10abc448b7" />
 
-+ Cierra la pestaña de page1. Observa la terminal. ¿Qué mensaje ves? ¿Coincide el ID con el que anotaste?
++ Abre http://localhost:3000/page2 en OTRA pestaña. Observa la terminal. ¿Qué mensaje ves? ¿El ID es diferente? ✔️
+<img width="899" height="195" alt="Captura de pantalla 2025-10-01 135736" src="https://github.com/user-attachments/assets/18b454e8-d8f0-44ba-9283-8e837aa43f37" />
 
-+ Cierra la pestaña de page2. Observa la terminal.
+R/  ID: ZYRVhlh8Rd3KyAbhAAAB
+
++ Cierra la pestaña de page1. Observa la terminal. ¿Qué mensaje ves? ¿Coincide el ID con el que anotaste? ✔️
+<img width="497" height="35" alt="Captura de pantalla 2025-10-01 141759" src="https://github.com/user-attachments/assets/586f51a0-e226-4d9d-ba24-b2e725ed6d1c" />
+
+R/ ID: NcI86hIPvrGrjfgKAAAD
+
++ Cierra la pestaña de page2. Observa la terminal. ✔️
+<img width="502" height="34" alt="Captura de pantalla 2025-10-01 141821" src="https://github.com/user-attachments/assets/09d79c98-6902-4fb1-846a-88755d313794" />
+
+CONCLUSION DEL EXPERIMENTO 2: cada conexion tiene un ID distinto (aunque sea desde el mismo computador y navegador). Cuando cerre la pestaña, el servidor detecta la desconexion y borra ese ID de su lista de clientes conectados
