@@ -73,9 +73,12 @@ Si solo escribo www.netflix.com, el servidor me envia a la pagina de inicio por 
 Compara HTTP con los protocolos seriales que usaste. ¿Qué similitudes encuentras? ¿Qué diferencias clave ves?¿Por qué crees que HTTP necesita ser más complejo que un simple envío de bytes como hacías con el micro:bit?
 
 R/ 
-+ Similitudes: 
-+ Diferencias: 
-+ El por que de la complejidad de HTTP:
++ Similitudes: Los tres protocolos son reglas de comunicacion donde se asegura que dos dispositivos se puedan entender. En todos los casos hay un emisor y un receptor que intercambian informacion siguiendo un formato predefinido y se usan mensajes lo mas estructurado posibles para evitar datos confusos o incompletos
+
++ Diferencias: Por el lado de los protocolos seriales (ASCCI o binario) la comunicacion era mas basica ya que solo se usaban secuencias de bits o caracteres, marcando inicio y fin por paquete    
+En cuanto a HTPP la communicacion es mas completa ya que no solo se envian datos si no tambien metadatos como metodos, cabeceras, codigo de estado (ejemplos: GET, tipo de contenido, 200 OK, etc). Ademas este protocolo esta diseñado para q funcione sobre una red global como por ejemplo internet, donde hay muchos servidores y diversos clientes, en comparacion con ASCII/binario donde la comunicacion era local (microbit-pc)
+
++ El por que de la complejidad de HTTP: Lo que entiendo es que en protocolo (HTTP) necesita ser complejo pq con solo datos como los que habiamos estado trabajando no basta. Ahora se necesita indicar que se quiere, en que formato, como manejar errores. Solo enviar bytes ocasionaria que el navegador no sepa si esos datos son un texto, una imagen, un video, un error. Ser tan especificos por decirlo asi, permite que internet funcione universalmente, de modo que cualquier cliente pueda comunicarse con cualquier servidor
 
 🧐✍️HTML, CSS y JavaScript    
 Piensa en una página web simple, como un formulario de login.
@@ -83,23 +86,31 @@ Piensa en una página web simple, como un formulario de login.
 + ¿Qué parte es CSS (ej. el color del botón, el tipo de letra)?
 + ¿Qué parte es JavaScript (ej. la comprobación de si escribiste algo antes de enviar, el mensaje de “contraseña incorrecta” que aparece sin recargar la página)?
 
-R/
+R/ 
++ HTML: Los campos de usuario y contraseñe, el boton de ingresar
++ CSS: El color del boton, la imagen o el color del fondo, el tipo y el tamaño de la tipografia
++ JavaScript: Comprobar que no se dejen campos vacios, comprobar que los datos son correctos, mostrar mensaje de usuario o contraseña incorrecta
 
 🧐✍️¿Cómo se ejecuta JavaScript?    
 Compara el bucle draw() de p5.js con este modelo de “esperar a que algo pase y reaccionar”.
 + ¿Qué ventajas crees que tiene el modelo basado en eventos para una interfaz de usuario web?
 + ¿Sería eficiente tener un bucle draw() redibujando toda la página 60 veces por segundo si nada ha cambiado?
 
-R/
+R/ El modelo basado en eventos solo reacciona cuando ocurre algun cambio a comparacion del buccle draw() que se dibuja constantemente incluso si nada cambio. La ventaja es que es mucho mas eficiente para interfaces web usar el modelo basado en eventos pq no se gastarian recursos innecesarios al redibujar constantemente, ya que solo actuaria cuando el usuaria o el servidor asi lo requieran
 
 🧐✍️¿Qué es Node.js?    
 ¿Por qué crees que podría ser útil usar JavaScript tanto en el cliente (navegador) como en el servidor? ¿Se te ocurre alguna ventaja para los desarrolladores?
 
-R/
+R/ Pq se usaria un solo protocolo en todo el proyecto, permitiendo que un mismo desarrollador trabaje en ambos espacios sin tener que aprender o usar un lenguaje diferente. Eso podria lograr que el codigo sea mas facil de compartir y entender, y ademas se podria reutilizar funciones en ambos lador
 
 🧐✍️WebSockets y Socket.IO    
 Resume con tus propias palabras la diferencia fundamental entre una comunicación HTTP tradicional y una comunicación usando WebSockets/Socket.IO. ¿En qué tipo de aplicaciones has visto o podrías imaginar que se usa esta comunicación en tiempo real?
 
 R/
++ HTTP tradicional: funciona por peticion y respuesta. Es como mandar correos: yo envio uno y espero la respuesta
++ Usando WebSockets/Socket.IO: abren un canal de comunicacion permanente. Es como una llamada telefonica donde ambos pueden hablar en cualquier momento sin tener que pedir permiso formal
+
+Apps: whatsapp web, messenger, juegos multijugador en el navegador, google docs y parecidos
 
 ### 📚Actividad 03    
+
