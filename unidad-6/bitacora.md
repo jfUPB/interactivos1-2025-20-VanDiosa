@@ -122,12 +122,14 @@ Despues:
 <img width="828" height="209" alt="Captura de pantalla 2025-10-01 112640" src="https://github.com/user-attachments/assets/e5f4842b-3592-4ec9-a221-216163e76173" />
 
 + Intenta acceder a http://localhost:3000/page1. ¿Funciona?    
-R/ No, pq esa ruta ya no existe, nosotros la modificamos
+R/ No funciona, al modificar la ruta en el codigo la direccion /page1 dejo de estar definida por lo que al intentar acceder a ella no se encuentra coincidencias y responde con un error
+<img width="487" height="184" alt="Captura de pantalla 2025-10-01 112754" src="https://github.com/user-attachments/assets/d59a3715-37a4-43eb-b2c6-972b2cba35e1" />
 
 + Ahora intenta acceder a http://localhost:3000/pagina_uno. ¿Funciona?    
-R/ Si, pq esa es la ruta que nosotros colocamos
+R/ Si funciona, como definimos la ruta como /pagina_uno esa es la URL valida del momento y el servidor la asocia con page1.html
+<img width="690" height="318" alt="Captura de pantalla 2025-10-01 112824" src="https://github.com/user-attachments/assets/eabde3bc-6e71-4c34-a788-0c48c28c9de8" />
 
 + ¿Qué te dice esto sobre cómo el servidor asocia URLs con respuestas? Restaura el código.    
-R/ Si la URL no coincide exactamente con la ruta especificamente definida (/page1 ≠ /pagina_uno), el servidor devuelve un Cannot GET /page1    
-<img width="487" height="184" alt="Captura de pantalla 2025-10-01 112754" src="https://github.com/user-attachments/assets/d59a3715-37a4-43eb-b2c6-972b2cba35e1" />
-<img width="690" height="318" alt="Captura de pantalla 2025-10-01 112824" src="https://github.com/user-attachments/assets/eabde3bc-6e71-4c34-a788-0c48c28c9de8" />
+R/ Si la URL no coincide exactamente con la ruta que se define de manera explicita en el codigo (/page1 ≠ /pagina_uno), el servidor devuelve un error: Cannot GET /page1. O sea las respuestas dependen directamente de como esten configuradas las rutas en el servidor    
+
+
