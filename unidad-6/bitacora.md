@@ -161,5 +161,36 @@ R/ El mensaje que salio fue: "User disconnected - ID: ZYRVhlh8Rd3KyAbhAAAB", lo 
 R/ El mensaje que salio fue: "User disconnected - ID: NcI86hIPvrGrjfgKAAAD", significa lo mismo q lo anterior
 
 
-CONCLUSION DEL EXPERIMENTO 2: cada conexion tiene un ID distinto (aunque sea desde el mismo computador y navegador). Cuando cerre la pestaña, el servidor detecta la desconexion y borra ese ID de su lista de clientes conectados
+CONCLUSIÓN DEL EXPERIMENTO 2: cada conexion tiene un ID distinto (aunque sea desde el mismo computador y navegador). Cuando cerre la pestaña, el servidor detecta la desconexion y borra ese ID de su lista de clientes conectados
 
+
+🧐🧪✍️ Experimento 3  
+- Inicia el servidor y abre page1 y page2. ✔️
+
+- Mueve la ventana de page1. Observa la terminal del servidor. ¿Qué evento se registra (win1update o win2update)? ¿Qué datos (Data:) ves? ✔️
+
+<img width="878" height="255" alt="Captura de pantalla 2025-10-01 143905" src="https://github.com/user-attachments/assets/cdeef18d-c347-40e0-b34c-977c6e8de7ce" />
+
+R/ En la terminal aparece el evento `Received win1update`con los datos de la posición y tamaño de la ventana . Ejemplo:  `{ x: -6, y: 306, width: 610, height: 244 }`
+
+- Mueve la ventana de page2. Observa la terminal. ¿Qué evento se registra ahora? ¿Qué datos ves? ✔️
+
+<img width="896" height="254" alt="Captura de pantalla 2025-10-01 143936" src="https://github.com/user-attachments/assets/80c91c99-065c-4307-8aa0-63bac3183ac7" />
+
+R/ En la terminal aparece el evento `Received win2update`con los datos de la posición y tamaño de la ventana . Ejemplo:  `{ x: 368, y: 0, width: 904, height: 156 }`
+
+CONCLUSION DEL EXPERIMENTO 3 HASTA AQUI: Cada pagina tiene su propio evento de actualizacion y el servidor puede distinguir de quien vienen los datos
+
+- Experimento clave: cambia socket.broadcast.emit(‘getdata’, page1); por socket.emit(‘getdata’, page1); (quitando broadcast). Reinicia el servidor, abre ambas páginas. Mueve page1. ¿Se actualiza la visualización en page2? ¿Por qué sí o por qué no? (Pista: ¿A quién le envía el mensaje socket.emit?). Restaura el código a broadcast.emit.
+
+Codigo antes:
+
+<img width="1017" height="548" alt="Captura de pantalla 2025-10-01 145342" src="https://github.com/user-attachments/assets/abb433b5-34c9-4df7-be93-52e119d4edc1" />
+
+
+Codigo despues:
+
+<img width="1018" height="547" alt="Captura de pantalla 2025-10-01 145356" src="https://github.com/user-attachments/assets/a9ae0344-70fa-4176-ae27-ac0d6a80ae1b" />
+
+
+R/  Cuando movi page 1 el servidor recibio el evento y lo registro en la consola (se ve win1update…), PERO esos movimientos no se ven reflejados en page 2, la informacion no le esta llegando a ese cliente. Con `socket.emit(...)` solo el cliente que mando el evento recibe su propia info, asi que no hay sincronizacien entre las paginas; en cambio con `socket.broadcast.emit(...)` page1 y page2 se sincronizan porque cada vez que uno manda datos, el servidor los envia a los demas clientes
