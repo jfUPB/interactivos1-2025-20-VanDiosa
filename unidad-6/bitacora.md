@@ -244,13 +244,40 @@ R/ Al refrescar page2.html con el servidor detenido, ya no aparecieron mensajes 
 
 + Vuelve a iniciar el servidor y refresca la página. ¿Desaparecen los errores?  ✔️
 
-R/ No habia errores en la consola en ese momento, ya que habian desaparecido cuando se refresco la pagina con el servidor apagado. Al reiniciar el servidor y volver a refrescar, la consola mostro nuevamente los mensajes de conexion correctos, como en la primera captura
+R/ No habia errores en la consola en ese momento, ya que habian desaparecido cuando se refresco la pagina con el servidor apagado. Al reiniciar el servidor y volver a refrescar, la consola mostro nuevamente los mensajes de conexion correctos, como en la primera captura:
+
+```
+page2.js:30 Connected with ID: HybT7X6XsnMBABYvAAAB
+page2.js:51 Sync status: NOT SYNCED
+page2.js:44 Received valid remote data: {x: 0, y: 0, width: 100, height: 100}
+page2.js:51 Sync status: NOT SYNCED
+```
 
 #### 🧐🧪✍️ Experimento 2    
++ Comenta la línea socket.emit(‘win2update’, currentPageData, socket.id); dentro del listener connect. ✔️
+
+<img width="1380" height="456" alt="Captura de pantalla 2025-10-02 133425" src="https://github.com/user-attachments/assets/19477507-9215-422a-8d28-d0f380369f0a" />
+
++ Reinicia el servidor y refresca page1.html y page2.html. ✔️
+
+<img width="1919" height="1009" alt="Captura de pantalla 2025-10-02 133244" src="https://github.com/user-attachments/assets/976a6d26-0452-48fd-972f-a9c095cc03fa" />
+
++ Mueve la ventana de page2 un poco para que envíe una actualización. ✔️
+
+<img width="1591" height="728" alt="Captura de pantalla 2025-10-02 133324" src="https://github.com/user-attachments/assets/d06cf606-d0fc-4e7f-84a5-ccc9c2a31531" />
+
++ ¿Qué pasó? ¿Por qué? ✔️
+
+R/ Al reiniciar el servidor y refrescar page1 y page2, ambas ventanas cargaron y lograron sincronizarse inicialmente (se veian los circulos rojos unidos por la linea)
+
+Pero al mover la ventana de page2 , la posicion ya no le llego a page1, entonces la posicion de page1 no se actualizo con respecto al movimiento de page2
+
+Al comentar la linea `[//socket.emit](https://socket.emit/)('win2update', currentPageData, [socket.id](http://socket.id/));` dentro de la funcion `checkWindowPosition()` , page2 solo pudo enviar su posicion inicial gracias a la funcion setup. Eso permitio una primera sincronizacion, pero despues ya no pudo seguir enviando nuevas coordenadas, dañando la actualizacion en tiempo real
 
 #### 🧐🧪✍️ Experimento 3    
 
 #### 🧐🧪✍️ Experimento 4    
 
 #### 🧐🧪✍️ Experimento 5    
+
 
