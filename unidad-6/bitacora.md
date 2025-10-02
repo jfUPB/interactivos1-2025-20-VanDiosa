@@ -225,6 +225,26 @@ La funcion `listen` usa esa variable para abrir la puerta de comunicacion, por e
 
 ### 📚Actividad 04: Explorando los clientes (p5.js + Socket.IO)        
 #### 🧐🧪✍️ Experimento 1    
++ Abre page2.html en tu navegador (con el servidor corriendo). ✔️
++ Abre la consola de desarrollador (F12). ✔️
+
+<img width="1289" height="408" alt="Captura de pantalla 2025-10-02 120452" src="https://github.com/user-attachments/assets/369708d1-d8e0-4ba6-b22c-7ef1e5f25cab" />
+
++ Detén el servidor Node.js (Ctrl+C). ✔️
+
+<img width="707" height="90" alt="Captura de pantalla 2025-10-02 120632" src="https://github.com/user-attachments/assets/f7a29589-b27f-4682-9409-733fb1343d94" />
+
+R/ Cuando detuve el servidor, la consola mostro el error: `net::ERR_CONNECTION_REFUSED`(el navegador intento reconectarse pero el servidor ya no estaba disponible
+
++ Refresca la página page2.html. Observa la consola del navegador. ¿Ves algún error relacionado con la conexión? ¿Qué indica? ✔️
+
+<img width="1296" height="957" alt="Captura de pantalla 2025-10-02 125651" src="https://github.com/user-attachments/assets/f02253f4-a793-46c2-8129-aa3bff9dba17" />
+
+R/ Al refrescar page2.html con el servidor detenido, ya no aparecieron mensajes nuevos en la consola, porque el cliente no pudo ni iniciar la conexion
+
++ Vuelve a iniciar el servidor y refresca la página. ¿Desaparecen los errores?  ✔️
+
+R/ No habia errores en la consola en ese momento, ya que habian desaparecido cuando se refresco la pagina con el servidor apagado. Al reiniciar el servidor y volver a refrescar, la consola mostro nuevamente los mensajes de conexion correctos, como en la primera captura
 
 #### 🧐🧪✍️ Experimento 2    
 
@@ -233,3 +253,4 @@ La funcion `listen` usa esa variable para abrir la puerta de comunicacion, por e
 #### 🧐🧪✍️ Experimento 4    
 
 #### 🧐🧪✍️ Experimento 5    
+
