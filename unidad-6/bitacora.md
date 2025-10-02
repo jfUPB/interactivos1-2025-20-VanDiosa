@@ -299,7 +299,66 @@ Ocurre pq cada pagina al detectar un cambio en su posicion envia un evento (`win
 
 #### 🧐🧪✍️ Experimento 4    
 
++ Observa checkWindowPosition() en page2.js y modifica el código del if para comprobar si el código dentro de este se ejecuta. ✔️
+
+Antes:
+
+```jsx
+function checkWindowPosition() {
+    currentPageData = {
+        x: window.screenX,
+        y: window.screenY,
+        width: window.innerWidth,
+        height: window.innerHeight
+    };
+
+    if (currentPageData.x !== previousPageData.x || currentPageData.y !== previousPageData.y || 
+        currentPageData.width !== previousPageData.width || currentPageData.height !== previousPageData.height) {
+
+        point2 = [currentPageData.width / 2, currentPageData.height / 2]
+        socket.emit('win2update', currentPageData, socket.id);
+        previousPageData = currentPageData; 
+    }
+}
+```
+
+Despues:
+
+```jsx
+function checkWindowPosition() {
+    currentPageData = {
+        x: window.screenX,
+        y: window.screenY,
+        width: window.innerWidth,
+        height: window.innerHeight
+    };
+
+    if (currentPageData.x !== previousPageData.x || currentPageData.y !== previousPageData.y || 
+        currentPageData.width !== previousPageData.width || currentPageData.height !== previousPageData.height) {
+
+        console.log("El if se ejecuto");
+
+        point2 = [currentPageData.width / 2, currentPageData.height / 2]
+        socket.emit('win2update', currentPageData, socket.id);
+        previousPageData = currentPageData; 
+    }
+}
+```
+
++ Mueve cada ventana y observa las consolas. ✔️
+
+<img width="1163" height="890" alt="Captura de pantalla 2025-10-02 174301" src="https://github.com/user-attachments/assets/3db45fd1-7546-4c1a-83b8-564fed591668" />
+
++ ¿Qué puedes concluir y por qué? ✔️
+
+R/  Despues de cambiar el codigo e iniciar adecuadamente todo, al mover page2 y revisar la consola pude concluir que: El **if** dentro de `checkWindowPosition()` en `page2.js` funciona correctamente, o sea, se dispara siempre que la posicion o tamaño de Page2 cambia
+
+Por otro lado al mover la ventana de page1, en la consola de page2 se mostro que no solo se ejecuta su propio envio de datos, sino que ademas recibe datos del servidor cuando page1 se mueve
+
+Es decir, la sincronizacion funciona en ambos sentidos
+
 #### 🧐🧪✍️ Experimento 5    
+
 
 
 
