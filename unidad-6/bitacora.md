@@ -275,9 +275,31 @@ Pero al mover la ventana de page2 , la posicion ya no le llego a page1, entonces
 Al comentar la linea `[//socket.emit](https://socket.emit/)('win2update', currentPageData, [socket.id](http://socket.id/));` dentro de la funcion `checkWindowPosition()` , page2 solo pudo enviar su posicion inicial gracias a la funcion setup. Eso permitio una primera sincronizacion, pero despues ya no pudo seguir enviando nuevas coordenadas, dañando la actualizacion en tiempo real
 
 #### 🧐🧪✍️ Experimento 3    
++ Abre ambas páginas. ✔️
++ Mueve la ventana de page1. Observa la consola del navegador de page2. ¿Qué datos muestra? ✔️
+
+<img width="1919" height="1010" alt="Captura de pantalla 2025-10-02 171036" src="https://github.com/user-attachments/assets/ade2e76d-2063-47f0-9b5d-1dd009c7316f" />
+
+R/  En la consola de **page2** aparecen mensajes como:
+
+```html
+Received valid remote data:
+{ x: -138, y: 86, width: 750, height: 312 }
+Sync status: SYNCED
+```
+
+Eso significa que page2 esta recibiendo en tiempo real la informacion de posicion enviada por page1
+
++ Mueve la ventana de page2. Observa la consola de page1. ¿Qué pasa? ¿Por qué? ✔️
+    
+<img width="1919" height="1006" alt="Captura de pantalla 2025-10-02 171247" src="https://github.com/user-attachments/assets/b8b3c527-77d9-4615-bf38-b1d792392cdc" />    
+
+R/ En la consola de page1 se muestran los mismos mensajes con las coordenadas actualizadas de page2
+Ocurre pq cada pagina al detectar un cambio en su posicion envia un evento (`win1update` o `win2update`) al servidor. Este reenvia los datos a la otra pagina, y ahi es donde se registran en su consola. Asi ambas ventanas se mantienen sincronizadas y saben en que posicion esta la otra
 
 #### 🧐🧪✍️ Experimento 4    
 
 #### 🧐🧪✍️ Experimento 5    
+
 
 
