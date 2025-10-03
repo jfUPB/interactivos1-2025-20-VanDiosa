@@ -513,6 +513,8 @@ Las caracteristicas de la aplicación son:
 + Ondas expansivas que aparecen al haber contacto
 
 #### Bocetos 📝
+<img width="810" height="1080" alt="BocetoSistemas" src="https://github.com/user-attachments/assets/c7b17b3a-024f-4c8e-97ff-c1902e534c00" />
+
 
 #### Codigos 💻
 A el codigo del server, solo le personalice los mensajes de la consolo para que estuvieran de acuerdo a la tematica:}
@@ -901,6 +903,7 @@ Mensajes personalizados:
 #### Enlace al repositorio 🔗
 El codigo completo de la aplicación se encuentra aqui:
 https://github.com/VanDiosa/Unidad06-Actividad05.git
+
 
 
 
