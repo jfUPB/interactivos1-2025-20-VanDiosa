@@ -358,6 +358,70 @@ Por otro lado al mover la ventana de page1, en la consola de page2 se mostro que
 Es decir, la sincronizacion funciona en ambos sentidos
 
 #### 🧐🧪✍️ Experimento 5    
++ Cambia el background(220) para que dependa de la distancia entre las ventanas. Puedes calcular la magnitud del resultingVector usando let distancia = resultingVector.mag(); y luego usa map() para convertir esa distancia a un valor de gris o color. background(map(distancia, 0, 1000, 255, 0)); (ajusta el rango 0-1000 según sea necesario).
+
+Codigo añadido en fuction draw():
+
+```jsx
+		// Calcular la distancia
+    let distancia = resultingVector.mag();
+    
+    // Fondo azul dinámico según la distancia
+    let azul = map(distancia, 0, 1000, 255, 0); 
+    background(0, 0, azul);
+```
+
+Asi quedo la funcion completa:
+
+```jsx
+function draw() {
+    let vector2 = createVector(remotePageData.x, remotePageData.y);
+    let vector1 = createVector(currentPageData.x, currentPageData.y);
+    let resultingVector = createVector(vector2.x - vector1.x, vector2.y - vector1.y);
+
+    // Calcular la distancia
+    let distancia = resultingVector.mag();
+    
+    // Fondo azul dinámico según la distancia
+    let azul = map(distancia, 0, 1000, 255, 0); 
+    background(0, 0, azul);
+    
+    if (!isConnected) {
+        showStatus('Conectando al servidor...', color(255, 165, 0));
+        return;
+    }
+    
+    if (!hasRemoteData) {
+        showStatus('Esperando conexión de la otra ventana...', color(255, 165, 0));
+        return;
+    }
+    
+    if (!isFullySynced) {
+        showStatus('Sincronizando datos...', color(255, 165, 0));
+        return;
+    }
+
+    // Solo dibujar cuando esté completamente sincronizado
+    drawCircle(point2[0], point2[1]);
+    checkWindowPosition();
+    
+    stroke(50);
+    strokeWeight(20);
+    drawCircle(resultingVector.x + remotePageData.width / 2, resultingVector.y + remotePageData.height / 2);
+    line(point2[0], point2[1], resultingVector.x + remotePageData.width / 2, resultingVector.y + remotePageData.height / 2);
+}
+
+```
+
+Algunas capturas donde se puede ver el cambio de color en page 2 dependiendo de la distancia:
+
+<img width="1919" height="999" alt="Captura de pantalla 2025-10-02 190526" src="https://github.com/user-attachments/assets/6c4a1031-de12-456f-b65c-42ea955b5b76" />
+
+<img width="1919" height="940" alt="Captura de pantalla 2025-10-02 190536" src="https://github.com/user-attachments/assets/0e287851-b8d7-4cc3-a19e-db57ac78dde2" />
+
+<img width="1019" height="1012" alt="Captura de pantalla 2025-10-02 190614" src="https://github.com/user-attachments/assets/ac99e2c5-4a86-4de9-87c4-2b01174f6af1" />
+
++ Inventa otra modificación creativa.
 
 
 
