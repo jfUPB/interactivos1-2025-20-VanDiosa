@@ -282,7 +282,7 @@ Al comentar la linea `[//socket.emit](https://socket.emit/)('win2update', curren
 
 R/  En la consola de **page2** aparecen mensajes como:
 
-```html
+```
 Received valid remote data:
 { x: -138, y: 86, width: 750, height: 312 }
 Sync status: SYNCED
@@ -358,7 +358,7 @@ Por otro lado al mover la ventana de page1, en la consola de page2 se mostro que
 Es decir, la sincronizacion funciona en ambos sentidos
 
 #### 🧐🧪✍️ Experimento 5    
-+ Cambia el background(220) para que dependa de la distancia entre las ventanas. Puedes calcular la magnitud del resultingVector usando let distancia = resultingVector.mag(); y luego usa map() para convertir esa distancia a un valor de gris o color. background(map(distancia, 0, 1000, 255, 0)); (ajusta el rango 0-1000 según sea necesario).
++ Cambia el background(220) para que dependa de la distancia entre las ventanas. Puedes calcular la magnitud del resultingVector usando let distancia = resultingVector.mag(); y luego usa map() para convertir esa distancia a un valor de gris o color. background(map(distancia, 0, 1000, 255, 0)); (ajusta el rango 0-1000 según sea necesario).  ✔️
 
 Codigo añadido en fuction draw():
 
@@ -421,8 +421,84 @@ Algunas capturas donde se puede ver el cambio de color en page 2 dependiendo de 
 
 <img width="1019" height="1012" alt="Captura de pantalla 2025-10-02 190614" src="https://github.com/user-attachments/assets/ac99e2c5-4a86-4de9-87c4-2b01174f6af1" />
 
-+ Inventa otra modificación creativa.
++ Inventa otra modificación creativa.  ✔️
+Para la segunda modificacion creativa me gusta la idea de que el tamaño del circulo de page2 cambiara de acuerdo a la distancia entre las dos ventanas
 
+Esto se logro usando la función `map()` sobre la variable `distancia` creada en la modificacion anterior. Asi cuando las ventanas estan mas lejos el radio del circulo2 es mayor  y cuando las ventanas se acercan el radio es menor
+
+<img width="1919" height="1008" alt="Captura de pantalla 2025-10-02 194413" src="https://github.com/user-attachments/assets/cc689889-e3a0-4f89-9cc7-078756eb6e5a" />
+
+<img width="1145" height="624" alt="Captura de pantalla 2025-10-02 194913" src="https://github.com/user-attachments/assets/2a69aa83-2a83-414f-a2ae-f1e6eeeb7a50" />
+
+Codigo añadido / modificado en fuction draw():
+Se calculo un radio dinamico usando la funcion map() aplicada a la distancia
+
+```jsx
+		let radio = map(distancia, 0, 1000, 50, 200);
+
+    // Solo dibujar cuando esté completamente sincronizado
+    drawCircle(point2[0], point2[1], radio);
+
+    drawCircle(resultingVector.x + remotePageData.width / 2, resultingVector.y + remotePageData.height / 2, radio);
+    
+```
+
+Asi quedo la funcion completa:
+
+```jsx
+function draw() {
+    let vector2 = createVector(remotePageData.x, remotePageData.y);
+    let vector1 = createVector(currentPageData.x, currentPageData.y);
+    let resultingVector = createVector(vector2.x - vector1.x, vector2.y - vector1.y);
+
+    // Calcular la distancia
+    let distancia = resultingVector.mag();
+    
+    // Fondo azul dinamico segun la distancia
+    let azul = map(distancia, 0, 1000, 255, 0); 
+    background(0, 0, azul);
+
+    
+    
+    if (!isConnected) {
+        showStatus('Conectando al servidor...', color(255, 165, 0));
+        return;
+    }
+    
+    if (!hasRemoteData) {
+        showStatus('Esperando conexión de la otra ventana...', color(255, 165, 0));
+        return;
+    }
+    
+    if (!isFullySynced) {
+        showStatus('Sincronizando datos...', color(255, 165, 0));
+        return;
+    }
+
+     let radio = map(distancia, 0, 1000, 50, 200);
+
+    // Solo dibujar cuando esté completamente sincronizado
+    drawCircle(point2[0], point2[1], radio);
+    
+    checkWindowPosition();
+    
+    stroke(50);
+    strokeWeight(20);
+    // se agrego el valor radio
+    drawCircle(resultingVector.x + remotePageData.width / 2, resultingVector.y + remotePageData.height / 2, radio);
+    line(point2[0], point2[1], resultingVector.x + remotePageData.width / 2, resultingVector.y + remotePageData.height / 2);
+}
+```
+
+Funcion drawCircle() modificada:
+Se modifico la funcion drawCircle(x, y) para que aceptara un tercer parametro r que controla el radio del circulo
+
+```jsx
+function drawCircle(x, y, r) {
+    fill(255, 0, 0);
+    ellipse(x, y, r, r);
+}
+```
 
 
 
