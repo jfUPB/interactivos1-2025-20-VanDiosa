@@ -904,6 +904,16 @@ Mensajes personalizados:
 El codigo completo de la aplicación se encuentra aqui:
 https://github.com/VanDiosa/Unidad06-Actividad05.git
 
+## ⭐ Autoevaluacion
+Nota propuesta: 5 / 5
 
+Justificación:
+Propongo un 5 porque realice todas las 5 actividades de la unidad y complete la autoevaluacion. Ademas me tome el tiempo de analizar cada actividad, reflexionar sobre lo que hacia y como lo hacia, documentando todo el proceso en mi bitacora. Gracias a esto, aprendi nuevos conceptos y reforce mi comprension, no solo hice las tareas por cumplir. Considero que mi nota refleja de manera fiel el esfuerzo, la constancia y el aprendizaje obtenido durante la unidad :D
 
+A continuacion la defensa de cada actividad:
++ Actividad 1: Complete todos los pasos y documente el proceso en la bitacora, analizando lo que hacia
++ Actividad 2: Realice la tarea completa, me tome el tiempo para entender los conceptos nuevos, de preguntar a la IA y buscar en google si algo no me quedaba claro
++ Actividad 3: Segui todas las instrucciones, documente el desarrollo paso a paso, verifique que hacia cada experimento bien y que lo entendia antes de seguir al siguiente
++ Actividad 4: Complete la actividad al 100%, reflexione y aprendi de ella, reforzando los conceptos vistos
++ Actividad 5: Hice la actividad completa, analice el proceso y trate de resolver errores, como que los brillos q puse no me quedaban centrados, o que la linea de brillos que une los corazones estaba torcida, que palpitaban muy lento o muy rapido, etc
 
