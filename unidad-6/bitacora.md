@@ -516,8 +516,6 @@ Las caracteristicas de la aplicación son:
 
 #### Codigos 💻
 A el codigo del server, solo le personalice los mensajes de la consolo para que estuvieran de acuerdo a la tematica:}
-<details>
-<summary>Código del server (server)</summary>
 
 ```jsx
 const express = require('express');
@@ -635,8 +633,6 @@ Para los codigo base de page1/page2
 En general la sincronizacion en tiempo real con socket.io se mantiene intacta; solo cambie la parte visual y estetica
 
 Codigo de page1 (el de page2, es casi igual asi que lo omitire):
-<details>
-<summary>Código del cliente (page1)</summary>
 	
 ```jsx
 let currentPageData = {
@@ -905,5 +901,6 @@ Mensajes personalizados:
 #### Enlace al repositorio 🔗
 El codigo completo de la aplicación se encuentra aqui:
 https://github.com/VanDiosa/Unidad06-Actividad05.git
+
 
 
