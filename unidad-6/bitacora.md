@@ -515,7 +515,9 @@ Las caracteristicas de la aplicación son:
 #### Bocetos 📝
 
 #### Codigos 💻
-A el codigo del server, solo le personalice los mensajes de la consolo para que estuvieran de acuerdo a la tematica:
+A el codigo del server, solo le personalice los mensajes de la consolo para que estuvieran de acuerdo a la tematica:}
+<details>
+<summary>Código del server (server)</summary>
 
 ```jsx
 const express = require('express');
@@ -633,6 +635,9 @@ Para los codigo base de page1/page2
 En general la sincronizacion en tiempo real con socket.io se mantiene intacta; solo cambie la parte visual y estetica
 
 Codigo de page1 (el de page2, es casi igual asi que lo omitire):
+<details>
+<summary>Código del cliente (page1)</summary>
+	
 ```jsx
 let currentPageData = {
     x: window.screenX,
@@ -889,8 +894,16 @@ function windowResized() {
 }
 
 ```
+#### Capturas de la app 📸
+<img width="1919" height="1009" alt="Captura de pantalla 2025-10-03 002616" src="https://github.com/user-attachments/assets/07e66ef4-fe3a-4aed-9ed8-0b995fd34a1d" />
+<img width="1516" height="885" alt="Captura de pantalla 2025-10-03 002659" src="https://github.com/user-attachments/assets/43fd36b9-65af-40d4-b8bd-69d849e70fbf" />
+<img width="1156" height="922" alt="Captura de pantalla 2025-10-03 002726" src="https://github.com/user-attachments/assets/0bd7202f-5c91-4c2f-862a-58944342101f" />
+Mensajes personalizados:
+<img width="1102" height="530" alt="Captura de pantalla 2025-10-03 002756" src="https://github.com/user-attachments/assets/334511b1-ede9-45fd-82d7-0f626845d68a" />
+
 
 #### Enlace al repositorio 🔗
 El codigo completo de la aplicación se encuentra aqui:
 https://github.com/VanDiosa/Unidad06-Actividad05.git
+
 
