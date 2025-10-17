@@ -103,10 +103,13 @@ De esa manera ambos computadores podrian mover su circulo al mismo tiempo segun 
 R/ Los mensajes console.log permiten ver en tiempo real lo q esta pasando en el servidor. Por ejemplo, muestran cuando se conecta o desconecta un cliente y q datos esta enviando el movil (como las coordenadas de toque). Esto ayuda a comprobar q la comunicacion entre los dispositivos funciona correctamente y facilita detectar errores o problemas de conexion
 
 ### 📚Actividad 04
+<img width="5647" height="892" alt="DiagramaUnidad7" src="https://github.com/user-attachments/assets/9887f026-980b-4f8b-b591-190919d4866d" />
+
 
 ## 🛠 Fase: Apply
 
 ### 📚Actividad 05
+
 
 
 
