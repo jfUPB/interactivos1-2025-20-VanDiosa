@@ -109,6 +109,262 @@ R/ Los mensajes console.log permiten ver en tiempo real lo q esta pasando en el 
 ## 🛠 Fase: Apply
 
 ### 📚Actividad 05
+#### Boceto e idea 🌟
+El visualizador esta inspirado en Black Swan de BTS.
+En el desktop, se encuentran tres circulos concentricos q representan las capas del sonido (voz, altos y bajos) que reaccionan visualmente al ritmo de la cancion. Desde el celular, el usuario puede interactuar en tiempo real: deslizar horizontalmente cambia la paleta de colores, y deslizar verticalmente acerca o separa los circulos, fusionándolos de 3 espectros a 1 solo
+
+<img width="1920" height="1080" alt="BocetoSistemas" src="https://github.com/user-attachments/assets/4d02dec4-dc9b-4a3a-8a16-2862689856d1" />
+
+#### Codigos 💻
+server.js
+```jsx
+const express = require('express');
+const http = require('http');
+const socketIO = require('socket.io');
+
+const app = express();
+const server = http.createServer(app); 
+const io = socketIO(server); 
+const port = 3000;
+
+app.use(express.static('public'));
+
+io.on('connection', (socket) => {
+    console.log('New client connected');
+    socket.on('message', (message) => {
+        console.log('Received message =>', message);
+        socket.broadcast.emit('message', message);
+    });
+
+    socket.on('disconnect', () => {
+        console.log('Client disconnected');
+    });
+});
+
+server.listen(port, () => {
+    console.log(`Server is listening on http://localhost:${port}`);
+});
+```
+
+desktop/sketch.js
+```jsx
+let song;
+let fft;
+let fusion = false;
+let socket;
+
+let hueShift = 0;
+let rotationAngles = [0, 0, 0];
+let baseRadius = 140;
+let spacing = 90;
+let transition = 0; // 0 = tres anillos, 1 = uno solo
+
+function preload() {
+    soundFormats('mp3');
+    song = loadSound('blackswan.mp3');
+}
+
+function setup() {
+    createCanvas(800, 800);
+    colorMode(HSB);
+    fft = new p5.FFT();
+    socket = io();
+
+    socket.on('message', handleTouch);
+
+    userStartAudio().then(() => {
+        if (!song.isPlaying()) song.loop();
+    });
+}
+
+function handleTouch(data) {
+    if (data.type === 'touch') {
+        if (data.direction === "left") hueShift -= 10;
+        else if (data.direction === "right") hueShift += 10;
+        else if (data.direction === "down") fusion = true;
+        else if (data.direction === "up") fusion = false;
+    }
+}
+
+function draw() {
+    background(0, 0.2);
+    translate(width / 2, height / 2);
+    noFill();
+
+    let spectrum = fft.analyze();
+
+    // Rotaciones independientes (el del medio gira al revés)
+    rotationAngles[0] += 0.005; 
+    rotationAngles[1] -= 0.006;
+    rotationAngles[2] += 0.007;
+
+    // Transición suave entre 3 y 1 espectro
+    if (fusion) transition = lerp(transition, 1, 0.05);
+    else transition = lerp(transition, 0, 0.05);
+
+    // Valores de transición
+    let mergeOffset = spacing * transition;
+    let alphaOuter = 255 * (1 - transition);
+    let scaleCentral = 1 + 0.4 * transition;
+
+    // Dibujo de los tres anillos (se acercan al centro)
+    if (transition < 0.98) {
+        push();
+        strokeWeight(2);
+        drawBars(spectrum, getRainbowColor(0), baseRadius - mergeOffset, baseRadius - mergeOffset + 40, rotationAngles[0], alphaOuter);
+        drawBars(spectrum, getRainbowColor(120), baseRadius + spacing * (1 - transition / 2), baseRadius + spacing * (1 - transition / 2) + 40, rotationAngles[1], 255);
+        drawBars(spectrum, getRainbowColor(240), baseRadius + spacing * 2 - mergeOffset, baseRadius + spacing * 2 - mergeOffset + 40, rotationAngles[2], alphaOuter);
+        pop();
+    }
+
+    // Dibujo del espectro fusionado (uno solo, más grande y brillante)
+    if (transition > 0.02) {
+        push();
+        let glow = map(transition, 0, 1, 0, 80);
+        strokeWeight(2.5 + glow * 0.02);
+        drawBars(
+            spectrum,
+            getRainbowColor(hueShift),
+            (baseRadius + spacing) * scaleCentral,
+            (baseRadius + spacing + 80) * scaleCentral,
+            rotationAngles[1],
+            map(transition, 0, 1, 0, 255)
+        );
+        pop();
+    }
+}
+
+// DIbujo de espectros dependientes a graves (interno), voces(medio), agudos(externo)
+function drawBars(spectrum, col, minR, maxR, rotationAngle, alphaVal = 255, start = 0, end = 1) {
+    push();
+    rotate(rotationAngle);
+    col.setAlpha(alphaVal);
+    stroke(col);
+    let len = spectrum.length;
+    for (let i = 0; i < 360; i += 3) {
+        let index = floor(map(i, 0, 360, start * len, end * len));
+        let amp = spectrum[index];
+        let r = map(amp, 0, 255, minR, maxR);
+        let rad = radians(i);
+        let x1 = minR * cos(rad);
+        let y1 = minR * sin(rad);
+        let x2 = r * cos(rad);
+        let y2 = r * sin(rad);
+        line(x1, y1, x2, y2);
+    }
+    pop();
+}
+
+function getRainbowColor(offset) {
+    let hue = (hueShift + offset) % 360;
+    return color(hue, 100, 100);
+}
+
+```
+
+mobile/sketch.js
+```jsx
+let socket;
+let lastTouchX = null;
+let lastTouchY = null;
+let lastSendTime = 0;
+const threshold = 30; // movimiento mínimo para detectar un gesto
+const cooldown = 300; // milisegundos entre gestos
+
+function setup() {
+    createCanvas(360, 500); 
+    background(0);
+    fill(255);
+    textAlign(CENTER, CENTER);
+    textSize(20);
+    text('Pulse of Swan 🦢', width / 2, height / 2 - 50);
+    textSize(15);
+    text('Desliza en dirección horizontal o vertical', width / 2, height / 2 + 30);
+
+    socket = io();
+
+    socket.on('connect', () => console.log('Conectado al servidor'));
+    socket.on('disconnect', () => console.log('Desconectado del servidor'));
+}
+
+function touchStarted() {
+    lastTouchX = mouseX;
+    lastTouchY = mouseY;
+}
+
+function touchMoved() {
+    if (!socket || !socket.connected) return false;
+
+    const now = millis();
+    if (now - lastSendTime < cooldown) return false; // evita enviar gestos seguidos
+
+    let dx = mouseX - lastTouchX;
+    let dy = mouseY - lastTouchY;
+
+    if (abs(dx) < threshold && abs(dy) < threshold) return false; // ignorar movimientos pequeños
+
+    let direction = "";
+    if (abs(dx) > abs(dy)) {
+        direction = dx > 0 ? "right" : "left";
+    } else {
+        direction = dy > 0 ? "down" : "up";
+    }
+
+    socket.emit('message', { type: 'touch', direction });
+    lastSendTime = now;
+
+    // Reinicia punto de referencia
+    lastTouchX = mouseX;
+    lastTouchY = mouseY;
+
+    background(0);
+    fill(255);
+    textSize(20);
+    let mensaje = "";
+
+    switch (direction) {
+        case "right":
+            mensaje = "Deslizaste hacia la derecha →";
+            break;
+        case "left":
+            mensaje = "← Deslizaste hacia la izquierda";
+            break;
+        case "down":
+            mensaje = "⬇ Capas fusionadas";
+            break;
+        case "up":
+            mensaje = "⬆ Capas separadas";
+            break;
+    }
+
+    text(mensaje, width / 2, height / 2);
+    return false;
+}
+```
+
+#### Capturas de la app 📸
+<img width="812" height="810" alt="Captura de pantalla 2025-10-17 002430" src="https://github.com/user-attachments/assets/7b86f5b3-c007-4653-accc-bf74b140dbf3" />
+<img width="816" height="813" alt="Captura de pantalla 2025-10-17 002443" src="https://github.com/user-attachments/assets/97aaefc5-9c2e-45a2-a7b4-7c1c7b202dd3" />
+
+
+#### Enlace al repositorio 🔗
+La aplicación se encuentra aqui:
+https://github.com/VanDiosa/Pulse-of-Swan
+
+## ⭐ Autoevaluacion
+Nota propuesta: 5 / 5
+
+Justificación:  
+Propongo un 5 pq complete todas las actividades de la unidad y documente cada paso en mi bitacora. No solo ejecute las tareas, sino que analice y entendi los conceptos nuevos (Dev Tunnels, Socket.IO, touch events en p5.js, etc). Probe, depure y mejore el caso de estudio base hasta convertirlo en mi proyecto final (Pulse of Swan), implemente la conexion movil→servidor→escritorio, ajuste la logica de gestos, use transiciones visuales coherentes con la musica
+
+Defensa de cada actividad:
++ Actividad 1: Segui las instrucciones completas y deje registro de mis resultados  
++ Actividad 2: Analice los conceptos nuevos y busque entenderlos a fondo
++ Actividad 3: Comprendi como funciona el servidor y la comunicacion entre clientes 
++ Actividad 4: Realice el diagrama siguiendo lo solicitado
++ Actividad 5: Diseñe y planifique el visualizador. Implemente, probe y fui ajustando mi aplicacion, reflexionando sobre los errores y mejoras  
+
+En general, considero que mi desempeño fue constante y responsable, y que mi nota refleja tanto el esfuerzo como el aprendizaje obtenido
 
 
 
