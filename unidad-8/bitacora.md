@@ -35,8 +35,12 @@ Microbit:
 + Acelerometro: al detectar movimiento, emite unos aros de luz que parten desde el centro de los espectros y se expande en el lienzo
 
 #### ✍️ Bocetos    
-Este es el boceto de como me imagino las interfaces:
+Este es el boceto 1 de como me imagine las interfaces:
 <img width="1920" height="1080" alt="BocetoSistemas" src="https://github.com/user-attachments/assets/dde99a5c-4dec-4a6d-a1f4-064e95caec36" />
+
+Luego en al terminar la interfaz del celular pense en que me gustaria pausar o iniciar la musica en el desktop, entonces hice otra version del boceto:
+<img width="1920" height="1080" alt="BocetoSistemas" src="https://github.com/user-attachments/assets/a41d626e-7986-4fe7-a9f3-69f8ab5a2648" />
+
 
 #### ✍️ Diagrama
 <img width="5647" height="1594" alt="Diagramas Sistemas Fisicos" src="https://github.com/user-attachments/assets/d054bed8-aace-4df5-9015-044ba5054fbb" />
@@ -47,6 +51,7 @@ Este es el boceto de como me imagino las interfaces:
 ### 📚Actividad 02  
 
 ## ⭐ Autoevaluación
+
 
 
 
