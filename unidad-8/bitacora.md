@@ -10,12 +10,8 @@ Como referencia y punto de partida inicial tome el proyecto de la unidad anterio
 <img width="816" height="813" alt="Captura de pantalla 2025-10-17 002443" src="https://github.com/user-attachments/assets/e0b85b40-1e8c-4cc0-89e8-8183766e8bda" />
 <img width="812" height="810" alt="Captura de pantalla 2025-10-17 002430" src="https://github.com/user-attachments/assets/6caa89e4-f476-4514-b7df-de5475138f6e" />
 
-En esta nueva version, para la interfaz del movil, me gustaria en la parte inferior mostrar la paleta de colores como unos cuadritos, y que a medida que se cambie la paleta con el touch la interfaz del movil tmb lo muestre. Algo asi:
-![7e071d6ecc9a9e52428ffe21d0774aac](https://github.com/user-attachments/assets/de0e2aa2-bc02-4117-873a-23dd87794e38)
-
-Ademas me gustaria añadir tmb como un boton deslizante para el cambio de 3 espectros a 1, no se pq pero me imagino algo como el modificador de tipo de cuerpo de la opcion de editar avatar en roblox:
+En esta nueva version, para la interfaz del movil, me gustaria añadir un boton deslizante para el cambio de 3 espectros a 1, no se pq pero me imagino algo como el modificador de tipo de cuerpo de la opcion de editar avatar en roblox:
 <img width="1058" height="465" alt="Captura de pantalla 2025-10-24 104357" src="https://github.com/user-attachments/assets/01218d85-3fcb-4b12-b420-61cf7d9276fe" />
-
 
 En el desktop me gustaria que al sacudir el microbit salieran y se expandieran un tipo ondas. Y si lo logro me gustaria que fueran brillantes
 <img width="720" height="641" alt="videoframe_27" src="https://github.com/user-attachments/assets/7022de77-2618-424e-a5bb-d87f0db7e85e" />
@@ -51,5 +47,6 @@ Este es el boceto de como me imagino las interfaces:
 ### 📚Actividad 02  
 
 ## ⭐ Autoevaluación
+
 
 
