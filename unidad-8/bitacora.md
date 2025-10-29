@@ -49,8 +49,25 @@ Luego en al terminar la interfaz del celular pense en que me gustaria pausar o i
 ## 🛠 Fase: Apply
 
 ### 📚Actividad 02  
+#### ✍️ Proceso de Construcción
+Este proyecto lo inicie usando el codigo de la actividad anterior, un visualizador de audio con tres circulos concentricos que reaccionaban al ritmo de una cancion (Black Swan de BTS). Esta versión inicial me servio como punto de partida para incorporar el microbit
+
+En la primera clase de esta unidad:
+
+1. Revise el codigo, que estuviera funcionando correctamente, lo clone y subi a un nuevo repo de github
+2. Antes de la nueva interaccion me quise tomar el tiempo de poner mas bonita la interfaz del celular, ya que, solo era el fondo negro con un texto en el centro que decia deslizaste a tal lado o capas fusionadas o no…
+- Primero se logro tener el triangulo del slider, pero era meramente visual no funcional, y la punta quedo hacia arriba (en el boceto la imagine hacia abajo). Ademas sentia q el canva era muy pequeño entonces lo cambie para que se adaptara al tamaño de la pantalla dependiendo del celular usando:  `createCanvas(windowWidth, windowHeight);`
+- Chat me comento que P5.js tiene un elemento deslizante: `createSlider()`  pero al usar lo se me generaba de forma horizontal por lo que se formaba un conflicto con el cambio de color que se controlaba tmb de forma horizontal
+- Entonces dividi el canva en 3 zonas, una para el titulo, otra para el slider y abajo una zona para el cambio de color. Tmb opte por no usar el elemento antes mencionado, entonces se creo una linea y una perilla. Aqui se me presento otra situacion. Hasta el momento solo estaba modificando el codigo del sketch del mobile pero entonces para que el slider funcionara tmb modifique unas vrbles en el sketch del desktop, para que la fusion ya no dependiera de recibir que se movio de arriba a abajo si no de una vrblae entre 0 y 1. En este momento ya funcionaba todo bien. Pero no tenia el triangulo entonces simplemente lo añadi detras del slider como algo meramente estetico
+- Tmb use emojis para que no se sintiera una interfaz tan plana, y asi quedo:
+<img src="https://github.com/user-attachments/assets/82106d9b-4f2b-4537-b446-e8be518a7b69" width="300">
+
+#### Codigos 💻
+
+#### Enlace al repositorio 🔗
 
 ## ⭐ Autoevaluación
+
 
 
 
