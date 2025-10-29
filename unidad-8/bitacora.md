@@ -18,9 +18,9 @@ En el desktop me gustaria que al sacudir el microbit salieran y se expandieran u
 <img src="https://github.com/user-attachments/assets/670049c6-bbd6-41b6-a863-40a5f5f1c57b" width="400" />
 
 #### 🧐 Concepto    
-El visualizador interactivo Pulse of... esta inspirado en Black Swan y Fake Love de BTS:
+El visualizador interactivo Pulse of BTS esta inspirado en Black Swan y Fake Love de BTS:
 + En el modo Black Swan se muestran tres circulos concentricos que representan las capas del sonido (voz altos y bajos) reaccionando al ritmo de la cancion
-+ En Fake Love los espectros cambian a formas triangulares y el fondo pasa de negro a blanco transformando de esa forma la atmosfera visual
++ En Fake Love la cancion se cambia y el fondo pasa de azul oscura a un tono magenta transformando de esa forma la atmosfera visual
 
 Desde el celular el usuario puede deslizar horizontalmente para cambiar la paleta de colores y verticalmente para modificar la distancia entre los espectros fusionandolos. Con el microbit se podra alternar entre canciones con los botones A y B y al detectar movimiento con el acelerometro generar destellos tipo explosion expandiendo ondas luminosas desde el centro
 
@@ -30,7 +30,7 @@ Movil-Touch:
 + Deslizamiento vertical: fusiona o separa las capas (de tres espectros a uno)
 
 Microbit:
-+ Boton A: cambia la musica de Black Swan a Fake Love, variando de un fondo negro a uno claro, y cambiando los espectos de circulos a triangulos
++ Boton A: cambia la musica de Black Swan a Fake Love, variando de un fondo azul oscuro a uno magenta
 + Boton B: regresa al modo Black Swan
 + Acelerometro: al detectar movimiento, emite unos aros de luz que parten desde el centro de los espectros y se expande en el lienzo
 
@@ -66,6 +66,7 @@ https://github.com/VanDiosa/Pulse-of
 
 
 ## ⭐ Autoevaluación
+
 
 
 
