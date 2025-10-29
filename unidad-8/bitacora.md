@@ -6,16 +6,16 @@
 ### 📚Actividad 01   
 
 #### 🧐 Referencias    
-Como referencia y punto de partida inicial tome el proyecto de la unidad anterior que se ve asi:
-<img width="816" height="813" alt="Captura de pantalla 2025-10-17 002443" src="https://github.com/user-attachments/assets/e0b85b40-1e8c-4cc0-89e8-8183766e8bda" />
-<img width="812" height="810" alt="Captura de pantalla 2025-10-17 002430" src="https://github.com/user-attachments/assets/6caa89e4-f476-4514-b7df-de5475138f6e" />
+Como referencia y punto de partida inicial tome el proyecto de la unidad anterior que se ve asi:     
+<img width="316" height="313" alt="Captura de pantalla 2025-10-17 002443" src="https://github.com/user-attachments/assets/e0b85b40-1e8c-4cc0-89e8-8183766e8bda" />
+<img width="312" height="310" alt="Captura de pantalla 2025-10-17 002430" src="https://github.com/user-attachments/assets/6caa89e4-f476-4514-b7df-de5475138f6e" />
 
 En esta nueva version, para la interfaz del movil, me gustaria añadir un boton deslizante para el cambio de 3 espectros a 1, no se pq pero me imagino algo como el modificador de tipo de cuerpo de la opcion de editar avatar en roblox:
-<img width="1058" height="465" alt="Captura de pantalla 2025-10-24 104357" src="https://github.com/user-attachments/assets/01218d85-3fcb-4b12-b420-61cf7d9276fe" />
+<img width="858" height="465" alt="Captura de pantalla 2025-10-24 104357" src="https://github.com/user-attachments/assets/01218d85-3fcb-4b12-b420-61cf7d9276fe" />
 
 En el desktop me gustaria que al sacudir el microbit salieran y se expandieran un tipo ondas. Y si lo logro me gustaria que fueran brillantes
-<img width="720" height="641" alt="videoframe_27" src="https://github.com/user-attachments/assets/7022de77-2618-424e-a5bb-d87f0db7e85e" />
-![db725e3d8c44831e3b61f16b9cda0772](https://github.com/user-attachments/assets/bd810e1e-02ad-4ada-85dd-1385838b5d2a)
+<img width="320" height="341" alt="videoframe_27" src="https://github.com/user-attachments/assets/7022de77-2618-424e-a5bb-d87f0db7e85e" />
+<img src="https://github.com/user-attachments/assets/670049c6-bbd6-41b6-a863-40a5f5f1c57b" width="400" />
 
 #### 🧐 Concepto    
 El visualizador interactivo Pulse of... esta inspirado en Black Swan y Fake Love de BTS:
@@ -35,10 +35,7 @@ Microbit:
 + Acelerometro: al detectar movimiento, emite unos aros de luz que parten desde el centro de los espectros y se expande en el lienzo
 
 #### ✍️ Bocetos    
-Este es el boceto 1 de como me imagine las interfaces:
-<img width="1920" height="1080" alt="BocetoSistemas" src="https://github.com/user-attachments/assets/dde99a5c-4dec-4a6d-a1f4-064e95caec36" />
-
-Luego en al terminar la interfaz del celular pense en que me gustaria pausar o iniciar la musica en el desktop, entonces hice otra version del boceto:
+Este es el boceto de como me imagine las interfaces:
 <img width="1920" height="1080" alt="BocetoSistemas" src="https://github.com/user-attachments/assets/a41d626e-7986-4fe7-a9f3-69f8ab5a2648" />
 
 
@@ -65,8 +62,11 @@ En la primera clase de esta unidad:
 #### Codigos 💻
 
 #### Enlace al repositorio 🔗
+https://github.com/VanDiosa/Pulse-of
+
 
 ## ⭐ Autoevaluación
+
 
 
 
