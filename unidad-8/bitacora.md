@@ -49,7 +49,7 @@ Este es el boceto de como me imagine las interfaces:
 #### ✍️ Proceso de Construcción
 Este proyecto lo inicie usando el [codigo de la actividad anterior](https://github.com/VanDiosa/Pulse-of-Swan), un visualizador de audio con tres circulos concentricos que reaccionaban al ritmo de una cancion (Black Swan de BTS). Esta versión inicial me servio como punto de partida para incorporar el microbit
 
-En la primera clase de esta unidad:
+##### Primera clase de la unidad:        
 
 1. Revise el codigo, que estuviera funcionando correctamente, lo clone y subi a un nuevo repo de github
 2. Los primeros prompts q le mande a chat fueron los siguientes, copiare lo mas relevante para no saturar la bitacora:    
@@ -472,6 +472,8 @@ En la primera clase de esta unidad:
 	pop();
 	```
 
+ ##### Segunda clase de la unidad:       
+
 5. Y ahora con las dos interfaces mas bonitas, le reenvie los codigos actualizados a chat y tmb le puse lo siguiente:
     
     “ AHORA TOCA INTEGRAL EL MICROBIT, ASI QUE TE RECUERDO LA IDEA:     
@@ -780,6 +782,9 @@ En la primera clase de esta unidad:
 	```
 	
 	En esta version se agrego la opcion de cambiar entre canciones. El microbit podia controlar eso con los botones A y B. Se añadieron las funciones `switchToFakeLove()` y `switchToBlackSwan()`. Ademas, en el `preload()` ahora se cargan las dos canciones, y en el `draw()` el fondo depende del tema que este sonando. Todo lo demas, como los anillos, la fusion y los botones de reproduccion, siguio igual
+
+
+##### Tercera clase de la unidad:
 
 6. Ya tenia las interfaces bonitas, y las canciones cambiando con los botones del microbit. Ahora queria que hubiera un cross fade, q al cambiar de cancion no empezaran desde cero si no que, como q al darle play las dos estuvieran reproduciendose y fuera como si se le bajara volumen a una y la otra sonara en el mismo min de reproduccion. Este fue el codigo que chat me dio para modificar el desktop:
 
