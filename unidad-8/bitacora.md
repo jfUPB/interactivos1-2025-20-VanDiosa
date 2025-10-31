@@ -160,9 +160,170 @@ Estos fue lo que le agrego al codigo:
 
 Y me sugirio eliminar lo siguiente: `triTop`, `triLeft`, `triRight`, `circlePos` . Función `pointInTriangle()`. Variable `dragging` y lógica de arrastre. Etiquetas visuales dentro del canvas. Evento `fusionControl` (reemplazado por `message` tipo `"fusion"`)      
 
-Como pudo ver chat me comento que P5.js tiene un elemento deslizante: `createSlider()`  pero al usar lo se me generaba de forma horizontal por lo que se formaba un conflicto con el cambio de color que se controlaba tmb de forma horizontal      
+Como pudo ver chat me comento que P5.js tiene un elemento deslizante: `createSlider()`  pero al usar lo se me generaba de forma horizontal por lo que se formaba un conflicto con el cambio de color que se controlaba tmb de forma horizontal. Entonces chat realizo las siguientes modificaciones:    
 
+```jsx
+let fusionValue = 0; // Nivel de fusión (0–1)
+let sliderY; // Posición vertical del control
+let sliderDragging = false;
+```
 
+```jsx
+//En la funcion draw ():
+
+// --- Control de fusión (slider vertical) ---
+    let sliderX = width * 0.85;
+    let sliderTop = height * 0.3;
+    let sliderBottom = height * 0.8; 
+
+// Línea del slider
+    stroke(100);
+    strokeWeight(4);
+    line(sliderX, sliderTop, sliderX, sliderBottom);
+
+    // Perilla del slider
+    let handleY = map(fusionValue, 0, 1, sliderBottom, sliderTop);
+    noStroke();
+    fill(255);
+    circle(sliderX, handleY, 20);
+
+    // Etiqueta del valor
+    noStroke();
+    textSize(14);
+    text(`${Math.round(fusionValue * 100)}%`, sliderX, sliderBottom + 25);
+
+    // Enviar valor si cambia
+    if (frameCount % 5 === 0 && socket && socket.connected) {
+        socket.emit('message', { type: 'fusion', value: fusionValue });
+    }
+```
+
+```jsx
+// En la funcion touchStarted()
+if (dist(mouseX, mouseY, sliderX, map(fusionValue, 0, 1, height * 0.8, height * 0.3)) < 30) {
+    sliderDragging = true;
+}
+```
+
+```jsx
+//En la funcion touchMoved():
+if (sliderDragging) {
+    fusionValue = map(mouseY, sliderBottom, sliderTop, 0, 1);
+    fusionValue = constrain(fusionValue, 0, 1);
+    return false;
+}
+```
+
+Y en esta version se eliminaron todos los elementos HTML (`createSlider`, `createP`). Los `fusionSlider`, `fusionLabel`, `lastFusionValue`. El condicional `if (fusionValue !== lastFusionValue)`      
+
+Pero como le dije a chat “ese slider esta muy estorboso, deberia de estar centrado y dejar un espacio abajo para poder uno hacer el movimiento horizontal para cambiar el color. ademas al deslizar el circulo todo hacia arriba no se fusiona, es como q hace el intento pero se enloquece”.      
+
+El me respondio:
+
+“Perfecto Vanesa 💡 —ya entiendo exactamente lo que quieres:      
+el slider debe sentirse **integrado al centro visual del móvil**, no como un control aparte.     
+Además, el **movimiento horizontal (color)** debe tener espacio libre **en la parte inferior**.     
+Y por supuesto, el **slider debe moverse suave** y **controlar bien la fusión**, sin “enloquecerse”.      
+Vamos a corregir todo eso 👇     
+🎯 Cambios que se harán        
+✅ Centrar el slider verticalmente (en el medio de la pantalla).     
+✅ Dejar una **zona inferior libre (~150 px)** para los gestos horizontales.    
+✅ Corregir el movimiento del círculo para que no rebote ni se trabe.    
+✅ Hacer que el slider emita el valor de fusión **solo cuando cambia realmente** (suave).    
+✅ Darle un look más minimalista, acorde al estilo *Pulse of Swan*.”      
+
+Entonces chat realizo las siguientes modificaciones:
+
+```jsx
+// En la función draw():
+
+// --- Títulos actualizados y reposicionados ---
+fill(255);
+textSize(22);
+text('Pulse of Swan 🦢', width / 2, height * 0.12);
+textSize(15);
+text('↑↓ Controla la fusión | ←→ Cambia el color', width / 2, height * 0.18);
+
+// --- Zona del slider (ahora centrada en pantalla) ---
+let sliderX = width / 2;
+let sliderTop = height * 0.25;
+let sliderBottom = height * 0.75;
+
+// Línea del slider (más delgada)
+stroke(80);
+strokeWeight(3);
+line(sliderX, sliderTop, sliderX, sliderBottom);
+
+// Perilla del slider (más grande)
+noStroke();
+let handleY = map(fusionValue, 0, 1, sliderBottom, sliderTop);
+fill(255);
+circle(sliderX, handleY, 28);
+
+// Etiqueta del valor más descriptiva
+noStroke();
+fill(200);
+textSize(14);
+text(`Fusión: ${Math.round(fusionValue * 100)}%`, sliderX, sliderBottom + 35);
+
+// --- Nueva zona inferior para gestos horizontales ---
+fill(255, 40);
+rect(0, height - 150, width, 150);
+noStroke();
+fill(255, 100);
+textSize(12);
+text('Zona de gestos horizontales (color)', width / 2, height - 80);
+
+```
+
+```jsx
+// En la función touchStarted():
+
+// Ahora el slider se detecta en el centro de la pantalla
+let handleY = map(fusionValue, 0, 1, height * 0.75, height * 0.25);
+if (dist(mouseX, mouseY, width / 2, handleY) < 30) {
+    sliderDragging = true;
+}
+```
+
+```jsx
+// En la función touchMoved():
+
+// Si se arrastra el slider vertical, se actualiza y envía solo si hay cambio significativo
+if (sliderDragging) {
+    let sliderTop = height * 0.25;
+    let sliderBottom = height * 0.75;
+    let newFusion = map(mouseY, sliderBottom, sliderTop, 0, 1);
+    newFusion = constrain(newFusion, 0, 1);
+
+    if (abs(newFusion - fusionValue) > 0.01) {
+        fusionValue = newFusion;
+        socket.emit('message', { type: 'fusion', value: fusionValue });
+    }
+    return false;
+}
+
+// Nuevo bloque: gestos horizontales en la zona inferior (cambio de color)
+if (mouseY > height - 150) {
+    const now = millis();
+    if (now - lastSendTime < cooldown) return false;
+
+    let dx = mouseX - lastTouchX;
+    if (abs(dx) > threshold) {
+        let direction = dx > 0 ? "right" : "left";
+        socket.emit('message', { type: 'touch', direction });
+
+        fill(255);
+        textSize(16);
+        text(direction === "right" ? "→ Color cálido" : "← Color frío", width / 2, height - 40);
+
+        lastSendTime = now;
+        lastTouchX = mouseX;
+    }
+}
+```
+
+En esta version se elimino:  El uso de `sliderY` (ya no era necesario). El bloque que enviaba el valor de fusión cada 5 frames: `if (frameCount % 5 === 0 && socket && socket.connected) {socket.emit('message', { type: 'fusion', value: fusionValue });}`. Todo el manejo de gestos en 4 direcciones (`up`, `down`, `left`, `right`) dentro de `touchMoved()`. Los mensajes de texto dinámicos (→ “Cambio de color”, ⬆ “Separando capas”, etc.). Y las referencias al `sliderX` lateral (`width * 0.85`) y sus etiquetas asociadas      
 
 #### Codigos 💻
 Sketch.js/mobile:
@@ -311,6 +472,7 @@ https://github.com/VanDiosa/Pulse-of
 
 
 ## ⭐ Autoevaluación
+
 
 
 
