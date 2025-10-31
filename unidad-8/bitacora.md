@@ -983,7 +983,433 @@ En la primera clase de esta unidad:
 	
 	En esta version cambiamos la forma en que se manejaban las canciones, ahora ambas suenan al mismo tiempo, pero con volumenes distintos, y se usa un efecto de crossfade para pasar suavemente de una a la otra sin cortes. Tambien se agregaron textos informativos en pantalla que explican como usar los botones del microbit. Además, se ajusto el codigo de los botones de reproduccion para que controlen las dos canciones a la vez, haciendo que el sistema sea mas estable y continuo durante los cambios
 
-#### Codigos 💻
+7. En este punto le añadimos la interaccion con el acelerometro. Le recorde como la idea a chat y le reenvie los codigos actuales nuevamente. Tuvimos que modificar tanto el server como el sketch del desktop
+
+	Server:
+	
+	```jsx
+	const express = require('express');
+	const http = require('http');
+	
+	const { Server } = require("socket.io"); // const socketIO = require('socket.io');
+	const { SerialPort } = require('serialport'); // para conectar y leer los datos del microbit...
+	const { ReadlineParser } = require('@serialport/parser-readline'); //...a traves del puerto USB
+	
+	const app = express();
+	const server = http.createServer(app);
+	const io = new Server(server); // const io = socketIO(server); sintaxis moderna de V4
+	const port = 3000;
+	
+	app.use(express.static('public'));
+	
+	// Microbit
+	const microbitPort = new SerialPort({ path: 'COM10', baudRate: 115200 }); //REVISAR SIEMPRE QUE SE CAMBIA DE MICROBIT Y MODIFICAR EL COM
+	const parser = microbitPort.pipe(new ReadlineParser({ delimiter: '\n' }));
+	
+	// Vrbles acelerometro
+	let lastX = 0, lastY = 0;
+	let shakeThreshold = 500; // sensibilidad
+	let lastShakeTime = 0;
+	
+	parser.on('data', (line) => { // separar los valores (botones y acelerometro)
+	    const [x, y, a, b] = line.trim().split(',');
+	    const data = {
+	        x: Number(x),
+	        y: Number(y),
+	        buttonA: a === 'True' || a === '1',
+	        buttonB: b === 'True' || b === '1'
+	    };
+	
+	    if (data.buttonA) io.emit('microbit', { button: 'A' });
+	    if (data.buttonB) io.emit('microbit', { button: 'B' });
+	
+	    // Detectar acelerometro
+	    const deltaX = Math.abs(data.x - lastX);
+	    const deltaY = Math.abs(data.y - lastY);
+	    const now = Date.now();
+	
+	    if ((deltaX > shakeThreshold || deltaY > shakeThreshold) && (now - lastShakeTime > 1000)) {
+	        io.emit('microbit', { shake: true });
+	        lastShakeTime = now;
+	    }
+	
+	    lastX = data.x;
+	    lastY = data.y;
+	});
+	
+	// Socket.io
+	io.on('connection', (socket) => {
+	    console.log('Nuevo cliente conectado');
+	
+	    socket.on('message', (data) => { // Comunicacion Mobile → Desktop
+	        io.emit('message', data); // ahora io.emit en lugar de broadcast para asegurar que los 3 reciban todos los datos de sincronizacion
+	    });
+	
+	    socket.on('disconnect', () => {
+	        console.log('Cliente desconectado');
+	    });
+	});
+	
+	server.listen(port, () => {
+	    console.log(`Server listening on http://localhost:${port}`);
+	});
+	```
+	
+	En esta version se agrego la deteccion de movimiento del microbit usando los valores del acelerometro. Ahora el servidor compara los cambios en X y Y, y si pasan un limite (shakeThreshold) manda un evento `shake` a todos los clientes con `io.emit`. Se puso un pequeño tiempo de espera para no detectar muchas sacudidas seguidas. La comunicacion entre mobile y desktop sigue igual, usando `io.emit` para que todos reciban los datos
+	
+	Desktop:
+	
+	```jsx
+	let songBlackSwan, songFakeLove;
+	let fft;
+	let socket;
+	
+	let hueShift = 0;
+	let rotationAngles = [0, 0, 0];
+	let baseRadius = 140;
+	let spacing = 90;
+	let fusionValue = 0; // 0 = tres anillos, 1 = uno solo
+	
+	let currentMode = 'BlackSwan'; // Cancion inicial
+	
+	let playButton, pauseButton, stopButton; // Botones de reproduccion musica
+	let pulses = []; // Efecto de ondas expansivas
+	
+	function preload() {
+	    soundFormats('mp3');
+	    songBlackSwan = loadSound('blackswan.mp3');
+	    songFakeLove = loadSound('fakelove.mp3');
+	    song = songBlackSwan;
+	}
+	
+	function setup() {
+	    createCanvas(1900, 800);
+	    colorMode(HSB);
+	    fft = new p5.FFT();
+	    socket = io();
+	
+	    // Preparacion volumen inicial canciones
+	    songBlackSwan.setVolume(1);
+	    songFakeLove.setVolume(0);
+	
+	    // Botones de control
+	    playButton = createButton('▶');
+	    pauseButton = createButton('⏸');
+	    stopButton = createButton('⏹');
+	
+	    styleButton(playButton, width - 120, height / 2 - 100);
+	    styleButton(pauseButton, width - 120, height / 2);
+	    styleButton(stopButton, width - 120, height / 2 + 100);
+	
+	     playButton.mousePressed(() => {
+	    if (!songBlackSwan.isPlaying() && !songFakeLove.isPlaying()) {
+	      songBlackSwan.loop();
+	      songFakeLove.loop();
+	    }
+	    });
+	
+	    pauseButton.mousePressed(() => {
+	        songBlackSwan.pause();
+	        songFakeLove.pause();
+	    });
+	
+	    stopButton.mousePressed(() => {
+	        songBlackSwan.stop();
+	        songFakeLove.stop();
+	    });
+	
+	    userStartAudio();
+	
+	    // Microbit datos botones y acelerometro
+	    socket.on('microbit', (data) => {
+	        if (data.button === 'A') switchToFakeLove();
+	        if (data.button === 'B') switchToBlackSwan();
+	
+	        if (data.shake) {
+	      for (let i = 0; i < 4; i++) {
+	        pulses.push({
+	          r: 0,
+	          alpha: 255,
+	          growSpeed: random(10, 25),
+	          decaySpeed: random(3, 6)
+	        });
+	      }
+	    }
+	    });
+	
+	    // Mobile datos
+	    socket.on('message', handleTouch);
+	}
+	
+	function styleButton(btn, x, y) {
+	    btn.position(x, y);
+	    btn.size(60, 60);
+	    btn.style('font-size', '28px');
+	    btn.style('border', 'none');
+	    btn.style('border-radius', '50%');
+	    btn.style('background', 'rgba(100,0,200,0.4)');
+	    btn.style('color', 'white');
+	    btn.style('cursor', 'pointer');
+	    btn.style('backdrop-filter', 'blur(4px)');
+	    btn.mouseOver(() => btn.style('background', 'rgba(150,0,255,0.6)'));
+	    btn.mouseOut(() => btn.style('background', 'rgba(100,0,200,0.4)'));
+	}
+	
+	function crossfade(toMode) {
+	  const fadeTime = 5.0; // Tiempo de fundido en segundos
+	  if (toMode === 'FakeLove') {
+	    songBlackSwan.amp(0, fadeTime);
+	    songFakeLove.amp(1, fadeTime);
+	  } else {
+	    songBlackSwan.amp(1, fadeTime);
+	    songFakeLove.amp(0, fadeTime);
+	  }
+	}
+	
+	function switchToFakeLove() {
+	    if (currentMode === 'FakeLove') return;
+	    currentMode = 'FakeLove';
+	    crossfade('FakeLove');
+	    hueShift = 0;
+	}
+	
+	function switchToBlackSwan() {
+	    if (currentMode === 'BlackSwan') return;
+	    currentMode = 'BlackSwan';
+	    crossfade('BlackSwan');
+	    hueShift = 0;
+	}
+	
+	function handleTouch(data) {
+	    if (data.type === 'touch') {
+	        hueShift += data.direction === 'right' ? 10 : -10; // Antes decia: if (data.type === 'touch') { if (data.direction === "left") hueShift -= 10; else if (data.direction === "right") hueShift += 10;}
+	    }
+	    if (data.type === 'fusion') {
+	        fusionValue = constrain(data.value, 0, 1);
+	    }
+	}
+	
+	function draw() {
+	    background(currentMode === 'BlackSwan' ? 0 : color(280, 80, 30, 0.2));
+	    translate(width / 2, height / 2); // Mover origen
+	    noFill();
+	
+	    let spectrum = fft.analyze(); //Para dividir en frecuencias (graves, medios y agudos)
+	
+	    // Rotaciones independientes (el del medio gira al revés)
+	    rotationAngles[0] += 0.005;
+	    rotationAngles[1] -= 0.006;
+	    rotationAngles[2] += 0.007;
+	
+	    // Valores de fusión
+	    let transition = lerp(0, 1, fusionValue);
+	    let mergeOffset = spacing * transition;
+	    let alphaOuter = 255 * (1 - transition);
+	    let scaleCentral = 1 + 0.4 * transition;
+	
+	    // Título
+	    push();
+	    resetMatrix();
+	    textAlign(LEFT, CENTER);
+	    textSize(64);
+	    fill(255);
+	    text("Pulse of BTS", 100, height / 2 - 25);
+	    pop();
+	
+	    // Texto informativo funcionamieno microbit
+	    push();
+	    resetMatrix();
+	    textSize(22);
+	    fill(200);
+	    text("Controles Micro:bit:", 100, height / 2 + 40);
+	    text("Botón A → Fake Love", 100, height / 2 + 80);
+	    text("Botón B → Black Swan", 100, height / 2 + 110);
+	    pop();
+	
+	    // Dibujo de los tres anillos (se acercan al centro)
+	    if (transition < 0.98) {
+	        push();
+	        strokeWeight(2);
+	        drawBars(spectrum, getRainbowColor(0), baseRadius - mergeOffset, baseRadius - mergeOffset + 40, rotationAngles[0], alphaOuter);
+	        drawBars(spectrum, getRainbowColor(120), baseRadius + spacing * (1 - transition / 2), baseRadius + spacing * (1 - transition / 2) + 40, rotationAngles[1], 255);
+	        drawBars(spectrum, getRainbowColor(240), baseRadius + spacing * 2 - mergeOffset, baseRadius + spacing * 2 - mergeOffset + 40, rotationAngles[2], alphaOuter);
+	        pop();
+	    }
+	
+	    // Dibujo del espectro fusionado (uno solo, más grande y brillante)
+	    if (transition > 0.02) {
+	        push();
+	        let glow = map(transition, 0, 1, 0, 80);
+	        strokeWeight(2.5 + glow * 0.02);
+	        drawBars(spectrum, getRainbowColor(hueShift), (baseRadius + spacing) * scaleCentral, (baseRadius + spacing + 80) * scaleCentral, rotationAngles[1], map(transition,0,1,0,255));
+	        pop();
+	    }
+	
+	    // Ondas expansivas
+	    push();
+	    blendMode(ADD);
+	    noFill();
+	    for (let i = pulses.length - 1; i >= 0; i--) {
+	        let p = pulses[i];
+	        strokeWeight(3);
+	        let col = currentMode === 'BlackSwan' ? color(200, 100, 100, p.alpha / 255) : color(330, 100, 100, p.alpha / 255);
+	        stroke(col);
+	        ellipse(0, 0, p.r * 2);
+	        p.r += p.growSpeed;
+	        p.alpha -= p.decaySpeed;
+	        if (p.alpha <= 0) pulses.splice(i, 1);
+	    }
+	    pop();
+	}
+	
+	// Dibujo de espectros: graves (interno), voces(medio), agudos(externo)
+	function drawBars(spectrum, col, minR, maxR, rotationAngle, alphaVal=255, start=0, end=1) {
+	    push();
+	    rotate(rotationAngle);
+	    col.setAlpha(alphaVal);
+	    stroke(col);
+	    let len = spectrum.length;
+	    for (let i = 0; i < 360; i += 3) {
+	        let index = floor(map(i,0,360,start*len,end*len));
+	        let amp = spectrum[index];
+	        let r = map(amp,0,255,minR,maxR); // radio segun la amplitud del sonido
+	        let rad = radians(i);
+	        line(minR*cos(rad), minR*sin(rad), r*cos(rad), r*sin(rad)); // (coordenadas x y y del radio interno, amplitud)
+	    }
+	    pop();
+	}
+	
+	function getRainbowColor(offset) { // variacion de paleta de colores
+	    let hue = (hueShift + offset) % 360;
+	    return color(hue, 100, 100);
+	}
+	```
+	
+	En esta version se agrego un nuevo efecto visual de ondas expansivas que aparece cuando el microbit detecta una sacudida (shake). Cada vez que esto pasa, se crean varios pulsos que crecen y se desvanecen desde el centro, dando la sensacion de impacto o energia. Para lograrlo se incluyo el arreglo `pulses[]` y un bloque en `draw()` que dibuja y actualiza esas ondas. Tambien se ajusto el evento del microbit para reconocer el movimiento, manteniendo todo lo demas igual: el cambio entre canciones, los controles y el efecto de fusion siguio funcionando igual que antes
+
+8. Como ya tenia todo lo planeado, quise añadirle un detalle mas, una transicion del color del fondo cada q cambia de cancion. Esto lo logramos:
+
+	```jsx
+	// añadiendo nuevas variables
+	let bgColor;
+	let blackSwanColor;
+	let fakeLoveColor;
+	let targetMode;
+	```
+	
+	```jsx
+	// En setup()
+	blackSwanColor = color(0);
+	fakeLoveColor = color(280, 80, 30);
+	bgColor = blackSwanColor;
+	targetMode = 'BlackSwan';
+	```
+	
+	```jsx
+	// En switchToFakeLove() y switchToBlackSwan()
+	targetMode = 'FakeLove'; // o 'BlackSwan'
+	```
+	
+	```jsx
+	// En draw(), antes del background():
+	let targetColor = (targetMode === 'BlackSwan') ? blackSwanColor : fakeLoveColor;
+	bgColor = lerpColor(bgColor, targetColor, 0.05);
+	background(bgColor);
+	```
+	
+	El efecto que se logro fue una clase de interpolacion entre los dos colores de fondo
+
+9. En la segunda clase de la segunda semana de la unidad en los 40 min que me quedaban, quise poner un boton para conectar el microbit ya que la manera en que se estaba conectando era como solito de la nada, no como aprendimos que podiamos como selecionarlo con una ventana emergente. Pero no lo logre y se volvio un locuron. Entonces como en al rubrica lo que no solicitan es que el programa este 100% funcional decidi dejarlo no guardar commit de lo que hice en esos 40 min, ya que si lo hacia la interaccion con el microbit no funcionaba, no se estaban enviando o recibiendo los datos correctamente. Y ya no tuve oportunidad o tiempo para solicitar por fuera de la clase el microbit :p
+
+	De igual forma quede satisfecha con lo logrado, y siento que cumpli con todo lo solicitado. Me hubiera gustado poder poner el boton del microbit
+
+#### 💻Codigos          
+Codigo microbit:
+```python
+# Imports go at the top
+from microbit import *
+
+uart.init(115200)
+display.show(Image.HEART)
+
+while True:
+    xValue = accelerometer.get_x()
+    yValue = accelerometer.get_y()
+    aState = button_a.is_pressed()
+    bState = button_b.is_pressed()
+    data = "{},{},{},{}\n".format(xValue, yValue, aState,bState)
+    uart.write(data)
+    sleep(100) # Envia datos a 10 Hz
+```
+server.js
+```javascript
+const express = require('express');
+const http = require('http');
+
+const { Server } = require("socket.io"); // const socketIO = require('socket.io');
+const { SerialPort } = require('serialport'); // para conectar y leer los datos del microbit...
+const { ReadlineParser } = require('@serialport/parser-readline'); //...a traves del puerto USB
+
+const app = express();
+const server = http.createServer(app);
+const io = new Server(server); // const io = socketIO(server); sintaxis moderna de V4
+const port = 3000;
+
+app.use(express.static('public'));
+
+// Microbit
+const microbitPort = new SerialPort({ path: 'COM10', baudRate: 115200 }); //REVISAR SIEMPRE QUE SE CAMBIA DE MICROBIT Y MODIFICAR EL COM
+const parser = microbitPort.pipe(new ReadlineParser({ delimiter: '\n' }));
+
+// Vrbles acelerometro
+let lastX = 0, lastY = 0;
+let shakeThreshold = 500; // sensibilidad
+let lastShakeTime = 0;
+
+parser.on('data', (line) => { // separar los valores (botones y acelerometro)
+    const [x, y, a, b] = line.trim().split(',');
+    const data = {
+        x: Number(x),
+        y: Number(y),
+        buttonA: a === 'True' || a === '1',
+        buttonB: b === 'True' || b === '1'
+    };
+
+    if (data.buttonA) io.emit('microbit', { button: 'A' });
+    if (data.buttonB) io.emit('microbit', { button: 'B' });
+
+    // Detectar acelerometro
+    const deltaX = Math.abs(data.x - lastX);
+    const deltaY = Math.abs(data.y - lastY);
+    const now = Date.now();
+
+    if ((deltaX > shakeThreshold || deltaY > shakeThreshold) && (now - lastShakeTime > 1000)) {
+        io.emit('microbit', { shake: true });
+        lastShakeTime = now;
+    }
+
+    lastX = data.x;
+    lastY = data.y;
+});
+
+// Socket.io
+io.on('connection', (socket) => {
+    console.log('Nuevo cliente conectado');
+
+    socket.on('message', (data) => { // Comunicacion Mobile → Desktop
+        io.emit('message', data); // ahora io.emit en lugar de broadcast para asegurar que los 3 reciban todos los datos de sincronizacion
+    });
+
+    socket.on('disconnect', () => {
+        console.log('Cliente desconectado');
+    });
+});
+
+server.listen(port, () => {
+    console.log(`Server listening on http://localhost:${port}`);
+});
+```
+
 Sketch.js/mobile:
 ```javascript
 let socket;
@@ -1106,30 +1532,263 @@ function windowResized() {
 }
 
 ```
+Sketch.js/desktop:
+```javascript
+let songBlackSwan, songFakeLove;
+let fft;
+let socket;
 
-Codigo microbit:
-```python
-# Imports go at the top
-from microbit import *
+let hueShift = 0;
+let rotationAngles = [0, 0, 0];
+let baseRadius = 140;
+let spacing = 90;
+let fusionValue = 0; // 0 = tres anillos, 1 = uno solo
 
-uart.init(115200)
-display.show(Image.HEART)
+let currentMode = 'BlackSwan'; // Cancion inicial
+let targetMode = 'BlackSwan';  // Transicion de fondo
 
-while True:
-    xValue = accelerometer.get_x()
-    yValue = accelerometer.get_y()
-    aState = button_a.is_pressed()
-    bState = button_b.is_pressed()
-    data = "{},{},{},{}\n".format(xValue, yValue, aState,bState)
-    uart.write(data)
-    sleep(100) # Envia datos a 10 Hz
+let playButton, pauseButton, stopButton; // Botones de reproduccion musica
+let pulses = []; // Efecto de ondas expansivas
+
+// Vrbles de transicion de color fondo
+let bgColor;
+let blackSwanColor;
+let fakeLoveColor
+
+function preload() {
+    soundFormats('mp3');
+    songBlackSwan = loadSound('blackswan.mp3');
+    songFakeLove = loadSound('fakelove.mp3');
+    song = songBlackSwan;
+}
+
+function setup() {
+    createCanvas(1900, 800);
+    colorMode(HSB);
+    fft = new p5.FFT();
+    socket = io();
+
+    // Colores base de las canciones
+    blackSwanColor = color(230, 80, 10); // Azul oscuro tenue
+    fakeLoveColor = color(320, 90, 25);  // Magenta rojizo
+    bgColor = blackSwanColor;
+
+    // Preparacion volumen inicial canciones
+    songBlackSwan.setVolume(1);
+    songFakeLove.setVolume(0);
+
+    // Botones de control
+    playButton = createButton('▶');
+    pauseButton = createButton('⏸');
+    stopButton = createButton('⏹');
+
+    styleButton(playButton, width - 120, height / 2 - 100);
+    styleButton(pauseButton, width - 120, height / 2);
+    styleButton(stopButton, width - 120, height / 2 + 100);
+
+     playButton.mousePressed(() => {
+    if (!songBlackSwan.isPlaying() && !songFakeLove.isPlaying()) {
+      songBlackSwan.loop();
+      songFakeLove.loop();
+    }
+    });
+
+    pauseButton.mousePressed(() => {
+        songBlackSwan.pause();
+        songFakeLove.pause();
+    });
+
+    stopButton.mousePressed(() => {
+        songBlackSwan.stop();
+        songFakeLove.stop();
+    });
+
+    userStartAudio();
+
+    // Microbit datos botones y acelerometro
+    socket.on('microbit', (data) => {
+        if (data.button === 'A') switchToFakeLove();
+        if (data.button === 'B') switchToBlackSwan();
+
+        if (data.shake) {
+      for (let i = 0; i < 4; i++) {
+        pulses.push({
+          r: 0,
+          alpha: 255,
+          growSpeed: random(10, 25),
+          decaySpeed: random(3, 6)
+        });
+      }
+    }
+    });
+
+    // Mobile datos
+    socket.on('message', handleTouch);
+}
+
+function styleButton(btn, x, y) {
+    btn.position(x, y);
+    btn.size(60, 60);
+    btn.style('font-size', '28px');
+    btn.style('border', 'none');
+    btn.style('border-radius', '50%');
+    btn.style('background', 'rgba(100,0,200,0.4)');
+    btn.style('color', 'white');
+    btn.style('cursor', 'pointer');
+    btn.style('backdrop-filter', 'blur(4px)');
+    btn.mouseOver(() => btn.style('background', 'rgba(150,0,255,0.6)'));
+    btn.mouseOut(() => btn.style('background', 'rgba(100,0,200,0.4)'));
+}
+
+function crossfade(toMode) {
+  const fadeTime = 5.0; // Tiempo de fundido en segundos
+  if (toMode === 'FakeLove') {
+    songBlackSwan.amp(0, fadeTime);
+    songFakeLove.amp(1, fadeTime);
+  } else {
+    songBlackSwan.amp(1, fadeTime);
+    songFakeLove.amp(0, fadeTime);
+  }
+}
+
+function switchToFakeLove() {
+    if (currentMode === 'FakeLove') return;
+    targetMode = 'FakeLove';
+    crossfade('FakeLove');
+    hueShift = 0;
+}
+
+function switchToBlackSwan() {
+    if (currentMode === 'BlackSwan') return;
+    targetMode = 'BlackSwan';
+    crossfade('BlackSwan');
+    hueShift = 0;
+}
+
+function handleTouch(data) {
+    if (data.type === 'touch') {
+        hueShift += data.direction === 'right' ? 10 : -10; // Antes decia: if (data.type === 'touch') { if (data.direction === "left") hueShift -= 10; else if (data.direction === "right") hueShift += 10;}
+    }
+    if (data.type === 'fusion') {
+        fusionValue = constrain(data.value, 0, 1);
+    }
+}
+
+function draw() {
+    // Suavizado del fondo entre canciones
+    let targetColor = targetMode === 'BlackSwan' ? blackSwanColor : fakeLoveColor;
+    bgColor = lerpColor(bgColor, targetColor, 0.02);
+    background(bgColor);
+    // Actualizar modo actual
+    if (abs(hue(bgColor) - hue(targetColor)) < 2) currentMode = targetMode;
+    
+    translate(width / 2, height / 2); // Mover origen
+    noFill();
+
+    let spectrum = fft.analyze(); //Para dividir en frecuencias (graves, medios y agudos)
+
+    // Rotaciones independientes (el del medio gira al revés)
+    rotationAngles[0] += 0.005;
+    rotationAngles[1] -= 0.006;
+    rotationAngles[2] += 0.007;
+
+    // Valores de fusión
+    let transition = lerp(0, 1, fusionValue);
+    let mergeOffset = spacing * transition;
+    let alphaOuter = 255 * (1 - transition);
+    let scaleCentral = 1 + 0.4 * transition;
+
+    // Título
+    push();
+    resetMatrix();
+    textAlign(LEFT, CENTER);
+    textSize(64);
+    fill(255);
+    text("Pulse of BTS", 100, height / 2 - 25);
+    pop();
+
+    // Texto informativo funcionamieno microbit
+    push();
+    resetMatrix();
+    textSize(22);
+    fill(200);
+    text("Controles Micro:bit:", 100, height / 2 + 40);
+    text("Botón A → Fake Love", 100, height / 2 + 80);
+    text("Botón B → Black Swan", 100, height / 2 + 110);
+    pop();
+
+    // Dibujo de los tres anillos (se acercan al centro)
+    if (transition < 0.98) {
+        push();
+        strokeWeight(2);
+        drawBars(spectrum, getRainbowColor(0), baseRadius - mergeOffset, baseRadius - mergeOffset + 40, rotationAngles[0], alphaOuter);
+        drawBars(spectrum, getRainbowColor(120), baseRadius + spacing * (1 - transition / 2), baseRadius + spacing * (1 - transition / 2) + 40, rotationAngles[1], 255);
+        drawBars(spectrum, getRainbowColor(240), baseRadius + spacing * 2 - mergeOffset, baseRadius + spacing * 2 - mergeOffset + 40, rotationAngles[2], alphaOuter);
+        pop();
+    }
+
+    // Dibujo del espectro fusionado (uno solo, más grande y brillante)
+    if (transition > 0.02) {
+        push();
+        let glow = map(transition, 0, 1, 0, 80);
+        strokeWeight(2.5 + glow * 0.02);
+        drawBars(spectrum, getRainbowColor(hueShift), (baseRadius + spacing) * scaleCentral, (baseRadius + spacing + 80) * scaleCentral, rotationAngles[1], map(transition,0,1,0,255));
+        pop();
+    }
+
+    // Ondas expansivas
+    push();
+    blendMode(ADD);
+    noFill();
+    for (let i = pulses.length - 1; i >= 0; i--) {
+        let p = pulses[i];
+        strokeWeight(3);
+        let col = currentMode === 'BlackSwan' ? color(200, 100, 100, p.alpha / 255) : color(330, 100, 100, p.alpha / 255);
+        stroke(col);
+        ellipse(0, 0, p.r * 2);
+        p.r += p.growSpeed;
+        p.alpha -= p.decaySpeed;
+        if (p.alpha <= 0) pulses.splice(i, 1);
+    }
+    pop();
+}
+
+// Dibujo de espectros: graves (interno), voces(medio), agudos(externo)
+function drawBars(spectrum, col, minR, maxR, rotationAngle, alphaVal=255, start=0, end=1) {
+    push();
+    rotate(rotationAngle);
+    col.setAlpha(alphaVal);
+    stroke(col);
+    let len = spectrum.length;
+    for (let i = 0; i < 360; i += 3) {
+        let index = floor(map(i,0,360,start*len,end*len));
+        let amp = spectrum[index];
+        let r = map(amp,0,255,minR,maxR); // radio segun la amplitud del sonido
+        let rad = radians(i);
+        line(minR*cos(rad), minR*sin(rad), r*cos(rad), r*sin(rad)); // (coordenadas x y y del radio interno, amplitud)
+    }
+    pop();
+}
+
+function getRainbowColor(offset) { // variacion de paleta de colores
+    let hue = (hueShift + offset) % 360;
+    return color(hue, 100, 100);
+}
 ```
 
-#### Enlace al repositorio 🔗
+#### 🔗Enlace al repositorio       
 https://github.com/VanDiosa/Pulse-of
 
-
 ## ⭐ Autoevaluación
+Nota propuesta: 5 / 5
+
+Justificación:
+Propongo un 5 pq complete todas las actividades de la unidad y documente todo en mi bitacora
+En la actividad 1, desarrolle los cinco items solicitados. No use IA para generar el diseño de mi proyecto, parti de una base que fue el apply de la unidad anterior, y pense como integrar el microbit de una forma logica y coherente con el concepto general, evitando usar los botones o el acelerometro solo por cumplir
+Sobre la actividad 2, cumpli con los 2 items, documente el proceso de construccion mencionando lo que le solicitaba a chat y las modificaciones que fui implementando. Ademas no me limite solo en copiar y pegar codigo, si no que mientras construia iba analizando, tratando de entender y aprender para que era cada funcion, vrble o linea que iba agregando. Todos los codigos estan en la bitacora y el link al repositorio tmb
+
+Por todo esto, ademas de por el esfuerzo y la dedicacion que le meti a la unidad considero que me merezco un 5 :D
+
 
 
 
