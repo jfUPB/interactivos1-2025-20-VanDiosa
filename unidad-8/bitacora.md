@@ -120,286 +120,666 @@ En la primera clase de esta unidad:
     }
     ```
 
-Se logro tener el triangulo del slider, pero era meramente visual no funcional, y la punta quedo hacia arriba (en el boceto la imagine hacia abajo). Ademas sentia q el canva era muy pequeño entonces lo cambie para que se adaptara al tamaño de la pantalla dependiendo del celular usando:  `createCanvas(windowWidth, windowHeight);`. Entonces le coloque esto a chat:    
-“me gusta como se ve, pero el slider del triangulo es meramente visual, o sea lo que yo queria es que al arrastrar el circulo ps se fusionaran o no los espectros. Ademas, quiero que la punta este hacia abajo pq hacia abajo es fusionado, y que la base este hacia arriba pq hacia arriba es que sean 3 espectros     
-te mando nuevamente todos los codigos, para que me pases una nueva version del codigo:     
-*(le pase nuevamente los codigos)*”     
+	Se logro tener el triangulo del slider, pero era meramente visual no funcional, y la punta quedo hacia arriba (en el boceto la imagine hacia abajo). Ademas sentia q el canva era muy pequeño entonces lo cambie para que se adaptara al tamaño de la pantalla dependiendo del celular usando:  `createCanvas(windowWidth, windowHeight);`. Entonces le coloque esto a chat:    
+	“me gusta como se ve, pero el slider del triangulo es meramente visual, o sea lo que yo queria es que al arrastrar el circulo ps se fusionaran o no los espectros. Ademas, quiero que la punta este hacia abajo pq hacia abajo es fusionado, y que la base este hacia arriba pq hacia arriba es que sean 3 espectros     
+	te mando nuevamente todos los codigos, para que me pases una nueva version del codigo:     
+	*(le pase nuevamente los codigos)*”     
+	
+	“La idea es que, además de los gestos, puedas **controlar el nivel de fusión (0–1)** con un slider, y que este valor se envíe al escritorio en tiempo real.     
+	P5.js tiene `createSlider()`, que podemos usar fácilmente.”     
+	
+	Estos fue lo que le agrego al codigo:
 
-“La idea es que, además de los gestos, puedas **controlar el nivel de fusión (0–1)** con un slider, y que este valor se envíe al escritorio en tiempo real.     
-P5.js tiene `createSlider()`, que podemos usar fácilmente.”     
+	```jsx
+	// en la funcion setup:
+	
+	// Crear el slider para fusión
+	    fusionSlider = createSlider(0, 100, 0);
+	    fusionSlider.position(width / 2 - 100, height / 2);
+	    fusionSlider.size(200);
+	    fusionSlider.style('accent-color', '#ffffff');
+	
+	    fusionLabel = createP('Nivel de fusión: 0%');
+	    fusionLabel.style('color', 'white');
+	    fusionLabel.position(width / 2 - 80, height / 2 + 30);
+	```
+	
+	```jsx
+	//funcion draw:
+	
+			// Leer valor del slider
+	    let fusionValue = fusionSlider.value();
+	
+	    // Solo enviar si cambia el valor
+	    if (fusionValue !== lastFusionValue) {
+	        socket.emit('message', { type: 'fusion', value: fusionValue / 100 });
+	        fusionLabel.html(`Nivel de fusión: ${fusionValue}%`);
+	        lastFusionValue = fusionValue;
+	    }
+	```
+	
+	Y me sugirio eliminar lo siguiente: `triTop`, `triLeft`, `triRight`, `circlePos` . Función `pointInTriangle()`. Variable `dragging` y lógica de arrastre. Etiquetas visuales dentro del canvas. Evento `fusionControl` (reemplazado por `message` tipo `"fusion"`)      
+	
+	Como pudo ver chat me comento que P5.js tiene un elemento deslizante: `createSlider()`  pero al usar lo se me generaba de forma horizontal por lo que se formaba un conflicto con el cambio de color que se controlaba tmb de forma horizontal. Entonces chat realizo las siguientes modificaciones:    
+	
+	```jsx
+	let fusionValue = 0; // Nivel de fusión (0–1)
+	let sliderY; // Posición vertical del control
+	let sliderDragging = false;
+	```
+	
+	```jsx
+	//En la funcion draw ():
+	
+	// --- Control de fusión (slider vertical) ---
+	    let sliderX = width * 0.85;
+	    let sliderTop = height * 0.3;
+	    let sliderBottom = height * 0.8; 
+	
+	// Línea del slider
+	    stroke(100);
+	    strokeWeight(4);
+	    line(sliderX, sliderTop, sliderX, sliderBottom);
+	
+	    // Perilla del slider
+	    let handleY = map(fusionValue, 0, 1, sliderBottom, sliderTop);
+	    noStroke();
+	    fill(255);
+	    circle(sliderX, handleY, 20);
+	
+	    // Etiqueta del valor
+	    noStroke();
+	    textSize(14);
+	    text(`${Math.round(fusionValue * 100)}%`, sliderX, sliderBottom + 25);
+	
+	    // Enviar valor si cambia
+	    if (frameCount % 5 === 0 && socket && socket.connected) {
+	        socket.emit('message', { type: 'fusion', value: fusionValue });
+	    }
+	```
+	
+	```jsx
+	// En la funcion touchStarted()
+	if (dist(mouseX, mouseY, sliderX, map(fusionValue, 0, 1, height * 0.8, height * 0.3)) < 30) {
+	    sliderDragging = true;
+	}
+	```
+	
+	```jsx
+	//En la funcion touchMoved():
+	if (sliderDragging) {
+	    fusionValue = map(mouseY, sliderBottom, sliderTop, 0, 1);
+	    fusionValue = constrain(fusionValue, 0, 1);
+	    return false;
+	}
+	```
+	
+	Y en esta version se eliminaron todos los elementos HTML (`createSlider`, `createP`). Los `fusionSlider`, `fusionLabel`, `lastFusionValue`. El condicional `if (fusionValue !== lastFusionValue)`      
+	
+	Pero como le dije a chat “ese slider esta muy estorboso, deberia de estar centrado y dejar un espacio abajo para poder uno hacer el movimiento horizontal para cambiar el color. ademas al deslizar el circulo todo hacia arriba no se fusiona, es como q hace el intento pero se enloquece”.      
+	
+	El me respondio:
+	
+	“Perfecto Vanesa 💡 —ya entiendo exactamente lo que quieres:      
+	el slider debe sentirse **integrado al centro visual del móvil**, no como un control aparte.     
+	Además, el **movimiento horizontal (color)** debe tener espacio libre **en la parte inferior**.     
+	Y por supuesto, el **slider debe moverse suave** y **controlar bien la fusión**, sin “enloquecerse”.      
+	Vamos a corregir todo eso 👇     
+	🎯 Cambios que se harán        
+	✅ Centrar el slider verticalmente (en el medio de la pantalla).     
+	✅ Dejar una **zona inferior libre (~150 px)** para los gestos horizontales.    
+	✅ Corregir el movimiento del círculo para que no rebote ni se trabe.    
+	✅ Hacer que el slider emita el valor de fusión **solo cuando cambia realmente** (suave).    
+	✅ Darle un look más minimalista, acorde al estilo *Pulse of Swan*.”      
+	
+	Entonces chat realizo las siguientes modificaciones:
+	
+	```jsx
+	// En la función draw():
+	
+	// --- Títulos actualizados y reposicionados ---
+	fill(255);
+	textSize(22);
+	text('Pulse of Swan 🦢', width / 2, height * 0.12);
+	textSize(15);
+	text('↑↓ Controla la fusión | ←→ Cambia el color', width / 2, height * 0.18);
+	
+	// --- Zona del slider (ahora centrada en pantalla) ---
+	let sliderX = width / 2;
+	let sliderTop = height * 0.25;
+	let sliderBottom = height * 0.75;
+	
+	// Línea del slider (más delgada)
+	stroke(80);
+	strokeWeight(3);
+	line(sliderX, sliderTop, sliderX, sliderBottom);
+	
+	// Perilla del slider (más grande)
+	noStroke();
+	let handleY = map(fusionValue, 0, 1, sliderBottom, sliderTop);
+	fill(255);
+	circle(sliderX, handleY, 28);
+	
+	// Etiqueta del valor más descriptiva
+	noStroke();
+	fill(200);
+	textSize(14);
+	text(`Fusión: ${Math.round(fusionValue * 100)}%`, sliderX, sliderBottom + 35);
+	
+	// --- Nueva zona inferior para gestos horizontales ---
+	fill(255, 40);
+	rect(0, height - 150, width, 150);
+	noStroke();
+	fill(255, 100);
+	textSize(12);
+	text('Zona de gestos horizontales (color)', width / 2, height - 80);
+	
+	```
+	
+	```jsx
+	// En la función touchStarted():
+	
+	// Ahora el slider se detecta en el centro de la pantalla
+	let handleY = map(fusionValue, 0, 1, height * 0.75, height * 0.25);
+	if (dist(mouseX, mouseY, width / 2, handleY) < 30) {
+	    sliderDragging = true;
+	}
+	```
+	
+	```jsx
+	// En la función touchMoved():
+	
+	// Si se arrastra el slider vertical, se actualiza y envía solo si hay cambio significativo
+	if (sliderDragging) {
+	    let sliderTop = height * 0.25;
+	    let sliderBottom = height * 0.75;
+	    let newFusion = map(mouseY, sliderBottom, sliderTop, 0, 1);
+	    newFusion = constrain(newFusion, 0, 1);
+	
+	    if (abs(newFusion - fusionValue) > 0.01) {
+	        fusionValue = newFusion;
+	        socket.emit('message', { type: 'fusion', value: fusionValue });
+	    }
+	    return false;
+	}
+	
+	// Nuevo bloque: gestos horizontales en la zona inferior (cambio de color)
+	if (mouseY > height - 150) {
+	    const now = millis();
+	    if (now - lastSendTime < cooldown) return false;
+	
+	    let dx = mouseX - lastTouchX;
+	    if (abs(dx) > threshold) {
+	        let direction = dx > 0 ? "right" : "left";
+	        socket.emit('message', { type: 'touch', direction });
+	
+	        fill(255);
+	        textSize(16);
+	        text(direction === "right" ? "→ Color cálido" : "← Color frío", width / 2, height - 40);
+	
+	        lastSendTime = now;
+	        lastTouchX = mouseX;
+	    }
+	}
+	```
+	
+	En esta version se elimino:  El uso de `sliderY` (ya no era necesario). El bloque que enviaba el valor de fusión cada 5 frames: `if (frameCount % 5 === 0 && socket && socket.connected) {socket.emit('message', { type: 'fusion', value: fusionValue });}`. Todo el manejo de gestos en 4 direcciones (`up`, `down`, `left`, `right`) dentro de `touchMoved()`. Los mensajes de texto dinámicos (→ “Cambio de color”, ⬆ “Separando capas”, etc.). Y las referencias al `sliderX` lateral (`width * 0.85`) y sus etiquetas asociadas   
+	
+	En este punto visualmente ya me estaba agrandando mucho ya que se veia asi:     
+	<img src="https://github.com/user-attachments/assets/a4794b1c-39c3-4c2f-9830-37ce19abfc0c" width="250">
+	
+	Pero se presentaba lo siguiente:
+	
+	“bien, en cuanto a distribucion vamos mejorando. pero al estar en 100% la fusion no se fusionan es como que al mover el slide se hace la transicion pero en lugar de pasar de 3 a 1 pasa de 3 a 3”
+	
+	“Perfecto 🫶 Vanesa, ya entendí clarito lo que pasa:
+	el *slider visual* sí está mandando valores de fusión al servidor, pero el **código del escritorio (`desktop/sketch.js`) todavía no interpreta esos valores** —solo reacciona a “up” o “down”.     
+	Por eso, aunque el slider cambie `fusionValue` (de 0 a 1), el desktop sigue leyendo solo `true` o `false` en `fusion`, lo que hace que la animación se quede “congelada” entre tres espectros.      
+	Vamos a solucionarlo totalmente:     
+	✅ el *mobile* enviará un valor de fusión continuo (`0–1`),    
+	✅ el *desktop* lo recibirá como `fusionValue` y     
+	✅ se usará directamente para interpolar el estado visual.”     
+	
+	Ahora pasamos a modificar el sketch del desktop, todo lo anterior fue solo en el mobile:
+	
+	```jsx
+	// Se reemplazo el control booleano de fusion por un valor numerico continuo (de 0 a 1) para permitir control mediante slider desde el movil
+	let fusionValue = 0;
+	
+	```
+	
+	```jsx
+	// En la funcion setup() se cambio el listener del socket 
+	socket.on('message', handleControl);
+	```
+	
+	```jsx
+	function handleControl(data) {
+	    if (data.type === 'touch') {
+	        if (data.direction === "left") hueShift -= 10;
+	        else if (data.direction === "right") hueShift += 10;
+	    }
+	    
+	    if (data.type === 'fusion') {
+	        fusionValue = constrain(data.value, 0, 1);
+	    }
+	}
+	
+	// En la version anterior solo respondia a direcciones (up/down/left/right) sin valores numericos
+	
+	```
+	
+	```jsx
+	// En la funcion draw():
+	
+	let transition = lerp(0, 1, fusionValue);
+	
+	// Ahora, el estado de transicion se calcula de forma continua, y se dibujan ambos de acuerdo al valor numerico recibido
+	
+	if (transition < 0.98) { /* tres espectros */ }
+	if (transition > 0.02) { /* uno fusionado */ }
+	
+	```
+	
+	En general se elimino: La vrble'fusion' (booleana), la vrble 'transition' como estado local (ahora es derivada). El bloque de 'handleTouch' y sus condicionales de dirección 'up'/'down'. La dependencia de gestos táctiles para activar/desactivar la fusión     
+	
+	Y ps en este punto lo ultimo que hice fue agregar el triangulo detras del slider, solo como una decoracion que tenia pensada desde el boceto de la siguiente forma:
+	
+	```jsx
+	// En la funcion draw():
+	 // Triángulo decorativo
+	    noStroke();
+	    fill(160, 100, 255, 80); // RGBA
+	    const triHeight = 420;
+	    const triWidth = 350;
+	    const cx = width / 2;
+	    const cy = height / 2;
+	    triangle(cx - triWidth / 2, cy - triHeight / 2, cx + triWidth / 2, cy - triHeight / 2, cx, cy + triHeight / 2); // Triángulo apuntando hacia abajo
+	
+	```
+	
+	Asi quedo la interfaz del mobile:     
+	<img src="https://github.com/user-attachments/assets/967be90d-86d7-4cbf-8a98-cef15cca107f" width="250">
 
-Estos fue lo que le agrego al codigo:
+4.  Con la interfaz del mobile terminada pase a editar la del desktop:
+	”Listo los codigos estan asi:
+	*(codigos actualizados)*
+	Ahora lo que quiero es organizar la interfaz del desktop.
+	Poner el titulo a la derecha. y a la izquierda tres botones. para iniciar, pausar y parar, te mando el boceto
+	(le anexe el boceto del desktop)
+	cuando tengamos eso listo, podremos empezar a integrar el microbit”
+	
+	Esto fue lo que se le agrego al codigo del sketch del desktop:
+	
+	```jsx
+	let playButton, pauseButton, stopButton;
+	```
+	
+	```jsx
+	// En la funcion setup():
+	createCanvas(1900, 800);
+	(...)
+	socket.on('message', handleTouch);
+	
+	 // --- Controles de música ---
+	playButton = createButton('▶');
+	pauseButton = createButton('⏸');
+	stopButton = createButton('⏹');
+	
+	 // Posiciones
+	styleButton(playButton, width - 120, height / 2 - 100);
+	styleButton(pauseButton, width - 120, height / 2);
+	styleButton(stopButton, width - 120, height / 2 + 100);
+	
+	playButton.mousePressed(() => {
+	    if (!song.isPlaying()) song.loop();
+	  });
+	
+	  pauseButton.mousePressed(() => {
+	    if (song.isPlaying()) song.pause();
+	  });
+	
+	  stopButton.mousePressed(() => {
+	    song.stop();
+	  });
+	```
+	
+	```jsx
+	function styleButton(btn, x, y) {
+	    btn.position(x, y);
+	    btn.size(60, 60);
+	    btn.style('font-size', '28px');
+	    btn.style('border', 'none');
+	    btn.style('border-radius', '50%');
+	    btn.style('background', 'rgba(100, 0, 200, 0.4)');
+	    btn.style('color', 'white');
+	    btn.style('cursor', 'pointer');
+	    btn.style('backdrop-filter', 'blur(4px)');
+	    btn.mouseOver(() => btn.style('background', 'rgba(150, 0, 255, 0.6)'));
+	    btn.mouseOut(() => btn.style('background', 'rgba(100, 0, 200, 0.4)'));
+	}
+	```
+	
+	```jsx
+	//En la funcion draw():
+	// --- Título ---
+	push();
+	resetMatrix(); // Restablece el sistema de coordenadas
+	textAlign(LEFT, CENTER);
+	textSize(64);
+	fill(255);
+	text("Pulse of BTS", 100, height / 2 - 25);
+	pop();
+	```
 
-```jsx
-// en la funcion setup:
-
-// Crear el slider para fusión
-    fusionSlider = createSlider(0, 100, 0);
-    fusionSlider.position(width / 2 - 100, height / 2);
-    fusionSlider.size(200);
-    fusionSlider.style('accent-color', '#ffffff');
-
-    fusionLabel = createP('Nivel de fusión: 0%');
-    fusionLabel.style('color', 'white');
-    fusionLabel.position(width / 2 - 80, height / 2 + 30);
-```
-
-```jsx
-//funcion draw:
-
-		// Leer valor del slider
-    let fusionValue = fusionSlider.value();
-
-    // Solo enviar si cambia el valor
-    if (fusionValue !== lastFusionValue) {
-        socket.emit('message', { type: 'fusion', value: fusionValue / 100 });
-        fusionLabel.html(`Nivel de fusión: ${fusionValue}%`);
-        lastFusionValue = fusionValue;
-    }
-```
-
-Y me sugirio eliminar lo siguiente: `triTop`, `triLeft`, `triRight`, `circlePos` . Función `pointInTriangle()`. Variable `dragging` y lógica de arrastre. Etiquetas visuales dentro del canvas. Evento `fusionControl` (reemplazado por `message` tipo `"fusion"`)      
-
-Como pudo ver chat me comento que P5.js tiene un elemento deslizante: `createSlider()`  pero al usar lo se me generaba de forma horizontal por lo que se formaba un conflicto con el cambio de color que se controlaba tmb de forma horizontal. Entonces chat realizo las siguientes modificaciones:    
-
-```jsx
-let fusionValue = 0; // Nivel de fusión (0–1)
-let sliderY; // Posición vertical del control
-let sliderDragging = false;
-```
-
-```jsx
-//En la funcion draw ():
-
-// --- Control de fusión (slider vertical) ---
-    let sliderX = width * 0.85;
-    let sliderTop = height * 0.3;
-    let sliderBottom = height * 0.8; 
-
-// Línea del slider
-    stroke(100);
-    strokeWeight(4);
-    line(sliderX, sliderTop, sliderX, sliderBottom);
-
-    // Perilla del slider
-    let handleY = map(fusionValue, 0, 1, sliderBottom, sliderTop);
-    noStroke();
-    fill(255);
-    circle(sliderX, handleY, 20);
-
-    // Etiqueta del valor
-    noStroke();
-    textSize(14);
-    text(`${Math.round(fusionValue * 100)}%`, sliderX, sliderBottom + 25);
-
-    // Enviar valor si cambia
-    if (frameCount % 5 === 0 && socket && socket.connected) {
-        socket.emit('message', { type: 'fusion', value: fusionValue });
-    }
-```
-
-```jsx
-// En la funcion touchStarted()
-if (dist(mouseX, mouseY, sliderX, map(fusionValue, 0, 1, height * 0.8, height * 0.3)) < 30) {
-    sliderDragging = true;
-}
-```
-
-```jsx
-//En la funcion touchMoved():
-if (sliderDragging) {
-    fusionValue = map(mouseY, sliderBottom, sliderTop, 0, 1);
-    fusionValue = constrain(fusionValue, 0, 1);
-    return false;
-}
-```
-
-Y en esta version se eliminaron todos los elementos HTML (`createSlider`, `createP`). Los `fusionSlider`, `fusionLabel`, `lastFusionValue`. El condicional `if (fusionValue !== lastFusionValue)`      
-
-Pero como le dije a chat “ese slider esta muy estorboso, deberia de estar centrado y dejar un espacio abajo para poder uno hacer el movimiento horizontal para cambiar el color. ademas al deslizar el circulo todo hacia arriba no se fusiona, es como q hace el intento pero se enloquece”.      
-
-El me respondio:
-
-“Perfecto Vanesa 💡 —ya entiendo exactamente lo que quieres:      
-el slider debe sentirse **integrado al centro visual del móvil**, no como un control aparte.     
-Además, el **movimiento horizontal (color)** debe tener espacio libre **en la parte inferior**.     
-Y por supuesto, el **slider debe moverse suave** y **controlar bien la fusión**, sin “enloquecerse”.      
-Vamos a corregir todo eso 👇     
-🎯 Cambios que se harán        
-✅ Centrar el slider verticalmente (en el medio de la pantalla).     
-✅ Dejar una **zona inferior libre (~150 px)** para los gestos horizontales.    
-✅ Corregir el movimiento del círculo para que no rebote ni se trabe.    
-✅ Hacer que el slider emita el valor de fusión **solo cuando cambia realmente** (suave).    
-✅ Darle un look más minimalista, acorde al estilo *Pulse of Swan*.”      
-
-Entonces chat realizo las siguientes modificaciones:
-
-```jsx
-// En la función draw():
-
-// --- Títulos actualizados y reposicionados ---
-fill(255);
-textSize(22);
-text('Pulse of Swan 🦢', width / 2, height * 0.12);
-textSize(15);
-text('↑↓ Controla la fusión | ←→ Cambia el color', width / 2, height * 0.18);
-
-// --- Zona del slider (ahora centrada en pantalla) ---
-let sliderX = width / 2;
-let sliderTop = height * 0.25;
-let sliderBottom = height * 0.75;
-
-// Línea del slider (más delgada)
-stroke(80);
-strokeWeight(3);
-line(sliderX, sliderTop, sliderX, sliderBottom);
-
-// Perilla del slider (más grande)
-noStroke();
-let handleY = map(fusionValue, 0, 1, sliderBottom, sliderTop);
-fill(255);
-circle(sliderX, handleY, 28);
-
-// Etiqueta del valor más descriptiva
-noStroke();
-fill(200);
-textSize(14);
-text(`Fusión: ${Math.round(fusionValue * 100)}%`, sliderX, sliderBottom + 35);
-
-// --- Nueva zona inferior para gestos horizontales ---
-fill(255, 40);
-rect(0, height - 150, width, 150);
-noStroke();
-fill(255, 100);
-textSize(12);
-text('Zona de gestos horizontales (color)', width / 2, height - 80);
-
-```
-
-```jsx
-// En la función touchStarted():
-
-// Ahora el slider se detecta en el centro de la pantalla
-let handleY = map(fusionValue, 0, 1, height * 0.75, height * 0.25);
-if (dist(mouseX, mouseY, width / 2, handleY) < 30) {
-    sliderDragging = true;
-}
-```
-
-```jsx
-// En la función touchMoved():
-
-// Si se arrastra el slider vertical, se actualiza y envía solo si hay cambio significativo
-if (sliderDragging) {
-    let sliderTop = height * 0.25;
-    let sliderBottom = height * 0.75;
-    let newFusion = map(mouseY, sliderBottom, sliderTop, 0, 1);
-    newFusion = constrain(newFusion, 0, 1);
-
-    if (abs(newFusion - fusionValue) > 0.01) {
-        fusionValue = newFusion;
-        socket.emit('message', { type: 'fusion', value: fusionValue });
-    }
-    return false;
-}
-
-// Nuevo bloque: gestos horizontales en la zona inferior (cambio de color)
-if (mouseY > height - 150) {
-    const now = millis();
-    if (now - lastSendTime < cooldown) return false;
-
-    let dx = mouseX - lastTouchX;
-    if (abs(dx) > threshold) {
-        let direction = dx > 0 ? "right" : "left";
-        socket.emit('message', { type: 'touch', direction });
-
-        fill(255);
-        textSize(16);
-        text(direction === "right" ? "→ Color cálido" : "← Color frío", width / 2, height - 40);
-
-        lastSendTime = now;
-        lastTouchX = mouseX;
-    }
-}
-```
-
-En esta version se elimino:  El uso de `sliderY` (ya no era necesario). El bloque que enviaba el valor de fusión cada 5 frames: `if (frameCount % 5 === 0 && socket && socket.connected) {socket.emit('message', { type: 'fusion', value: fusionValue });}`. Todo el manejo de gestos en 4 direcciones (`up`, `down`, `left`, `right`) dentro de `touchMoved()`. Los mensajes de texto dinámicos (→ “Cambio de color”, ⬆ “Separando capas”, etc.). Y las referencias al `sliderX` lateral (`width * 0.85`) y sus etiquetas asociadas   
-
-En este punto visualmente ya me estaba agrandando mucho ya que se veia asi:     
-<img src="https://github.com/user-attachments/assets/a4794b1c-39c3-4c2f-9830-37ce19abfc0c" width="250">
-
-Pero se presentaba lo siguiente:
-
-“bien, en cuanto a distribucion vamos mejorando. pero al estar en 100% la fusion no se fusionan es como que al mover el slide se hace la transicion pero en lugar de pasar de 3 a 1 pasa de 3 a 3”
-
-“Perfecto 🫶 Vanesa, ya entendí clarito lo que pasa:
-el *slider visual* sí está mandando valores de fusión al servidor, pero el **código del escritorio (`desktop/sketch.js`) todavía no interpreta esos valores** —solo reacciona a “up” o “down”.     
-Por eso, aunque el slider cambie `fusionValue` (de 0 a 1), el desktop sigue leyendo solo `true` o `false` en `fusion`, lo que hace que la animación se quede “congelada” entre tres espectros.      
-Vamos a solucionarlo totalmente:     
-✅ el *mobile* enviará un valor de fusión continuo (`0–1`),    
-✅ el *desktop* lo recibirá como `fusionValue` y     
-✅ se usará directamente para interpolar el estado visual.”     
-
-Ahora pasamos a modificar el sketch del desktop, todo lo anterior fue solo en el mobile:
-
-```jsx
-// Se reemplazo el control booleano de fusion por un valor numerico continuo (de 0 a 1) para permitir control mediante slider desde el movil
-let fusionValue = 0;
-
-```
-
-```jsx
-// En la funcion setup() se cambio el listener del socket 
-socket.on('message', handleControl);
-```
-
-```jsx
-function handleControl(data) {
-    if (data.type === 'touch') {
-        if (data.direction === "left") hueShift -= 10;
-        else if (data.direction === "right") hueShift += 10;
-    }
+5. Y ahora con las dos interfaces mas bonitas, le reenvie los codigos actualizados a chat y tmb le puse lo siguiente:
     
-    if (data.type === 'fusion') {
-        fusionValue = constrain(data.value, 0, 1);
-    }
-}
+    “ AHORA TOCA INTEGRAL EL MICROBIT, ASI QUE TE RECUERDO LA IDEA:     
+    Explicación control movil y microbit      
+    Movil-Touch:     
+    Deslizamiento horizontal: cambia la gama de colores de los espectros      
+    Deslizamiento vertical: fusiona o separa las capas (de tres espectros a uno)     
+    Microbit:       
+    Boton A: cambia la musica de Black Swan a Fake Love, variando de un fondo negro a uno claro, y cambiando los espectos de circulos a triangulos      
+    Boton B: regresa al modo Black Swan      
+    Acelerometro: al detectar movimiento, emite unos aros de luz que parten desde el centro de los espectros y se expande en el lienzo      
 
-// En la version anterior solo respondia a direcciones (up/down/left/right) sin valores numericos
+   SI QUIERES PRIMERO HAGAMOS LO DE LOS BOTONES QUE ES MAS FACIL CREO YO       
+    EN ACTIVIDADES ANTERIORES HEMOS PROGRAMADO EL MICROBIT ASI:      
+    #Imports go at the top    
+    from microbit import *      
+    uart.init(115200)       
+    display.show(Image.HEART)       
+    while True:     
+    xValue = accelerometer.get_x()        
+    yValue = accelerometer.get_y()          
+    aState = button_a.is_pressed()         
+    bState = button_b.is_pressed()        
+    data = "{},{},{},{}\n".format(xValue, yValue, aState,bState)       
+    uart.write(data)         
+    sleep(100) # Envia datos a 10 Hz”        
+    
+    “Perfecto Vanesa 💜 excelente organización — el sistema ya está muy limpio y modular, así que integrar el **micro:bit** te va a salir súper fluido.    
+    Y sí, empezamos por lo **más fácil: los botones A y B**, antes de pasar al acelerómetro.      
+    Primero necesitas instalar `serialport`: `npm install serialport` “       
+    
+    Despues de como 5 versiones q no encuentro ya que lo tuve que hacer en otro chat pq en el que estaba trabajando se me acabo la version gratuita, esto fue lo que se habia agregado al server:
+    
+    ```jsx
+    // --- NUEVA LÓGICA DE DIFUSIÓN ---
+    parser.on('data', line => {
+        const [x, y, a, b] = line.trim().split(',');
+        const data = { x, y, a, b };
+        io.emit('microbit', data); // 🔁 Enviar a TODOS los clientes
+    });
+    ```
+    
+    ```jsx
+    // --- NUEVA ESCUCHA DE MENSAJES ENTRE CLIENTES ---
+    socket.on('message', (message) => {
+        console.log('Mensaje recibido =>', message);
+        socket.broadcast.emit('message', message);
+    });
+    ```
+    
+    ```jsx
+    // --- NUEVOS LOGS INFORMATIVOS ---
+    console.log('📡 Servidor iniciado en http://localhost:3000');
+    console.log('🔌 Esperando datos del micro:bit en COM8...');
+    ```
+    
+    Se elimino el envio individual con `socket.emit`, para manejar todo con `io.emit`, permitiendo difusion global. Se reorganizo la seccion del parser para que la lectura del microbit no dependa de una conexion específica. Ahora siempre escucha y transmite datos
 
-```
+   Pero al tratar de ejecutar el programa me salio el siguiente error:
 
-```jsx
-// En la funcion draw():
+	```jsx
+	Vanesa@IdeaPad-Van MINGW64 ~/Desktop/UNIVERSIDAD/SEMESTRE 8/SISTEMA FISICOS INTERACTIVOS/Unidad8/PulseOf (main) 
+	$ npm start 
+	> sfinteractivesocketiodesktopmobile@1.0.0 start 
+	> node server.js 
+	C:\Users\Vanesa\Desktop\UNIVERSIDAD\SEMESTRE 8\SISTEMA FISICOS INTERACTIVOS\Unidad8\PulseOf\server.js:17 
+	const microbitPort = new SerialPort('COM8', { baudRate: 115200 }); 
+	^ 
+	TypeError: SerialPort is not a constructor 
+		at Object.<anonymous> 
+	(C:\Users\Vanesa\Desktop\UNIVERSIDAD\SEMESTRE 8\SISTEMA FISICOS INTERACTIVOS\Unidad8\PulseOf\server.js:17:22) 
+		at Module._compile (node:internal/modules/cjs/loader:1706:14) 
+		at Object..js (node:internal/modules/cjs/loader:1839:10) 
+		at Module.load (node:internal/modules/cjs/loader:1441:32) 
+		at Function._load (node:internal/modules/cjs/loader:1263:12) 
+		at TracingChannel.traceSync (node:diagnostics_channel:322:14) 
+		at wrapModuleLoad (node:internal/modules/cjs/loader:237:24) 
+		at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) 
+		at node:internal/main/run_main_module:36:49
+	```
+	
+	Se soluciono el error pero, despues si usaba el microbit el mobile no funcionaba y viceversa, pero entonces llegamos al siguiente codigo para el server:
+	
+	```jsx
+	const express = require('express');
+	const http = require('http');
+	const { Server } = require("socket.io");
+	const { SerialPort } = require('serialport');
+	const { ReadlineParser } = require('@serialport/parser-readline');
+	
+	const app = express();
+	const server = http.createServer(app);
+	const io = new Server(server);
+	const port = 3000;
+	
+	app.use(express.static('public'));
+	
+	// ===== Microbit =====
+	const microbitPort = new SerialPort({ path: 'COM8', baudRate: 115200 });
+	const parser = microbitPort.pipe(new ReadlineParser({ delimiter: '\n' }));
+	
+	parser.on('data', (line) => {
+	    const [x, y, a, b] = line.trim().split(',');
+	    const data = {
+	        x: Number(x),
+	        y: Number(y),
+	        buttonA: a === 'True' || a === '1',
+	        buttonB: b === 'True' || b === '1'
+	    };
+	
+	    if (data.buttonA) io.emit('microbit', { button: 'A' });
+	    if (data.buttonB) io.emit('microbit', { button: 'B' });
+	});
+	
+	// ===== Socket.io =====
+	io.on('connection', (socket) => {
+	    console.log('Nuevo cliente conectado');
+	
+	    // Mobile → desktop
+	    socket.on('message', (data) => {
+	        io.emit('message', data); // <- IMPORTANTE: emit a TODOS, no broadcast
+	    });
+	
+	    socket.on('disconnect', () => {
+	        console.log('Cliente desconectado');
+	    });
+	});
+	
+	server.listen(port, () => {
+	    console.log(`Server listening on http://localhost:${port}`);
+	});
+	
+	```
+	
+	En esta version se unifico completamente la comunicacion entre el microbit y todos los clientes conectados. Asi los datos seriales del microbit se procesan globalmente y se emiten mediante `io.emit`, permitiendo que cualquier navegador reciba los eventos de los botones A y B en tiempo real. Ademas, se simplifico la logica del servidor para que los mensajes enviados desde cualquier cliente se reenvien a todos (no solo a otros), asegurando sincronizacion total entre dispositivos. Tambien se optimizo el parser para interpretar valores tanto en formato `'True'/'False'` como `'1'/'0'`, mejorando la compatibilidad de lectura del microbit
 
-let transition = lerp(0, 1, fusionValue);
+	De igual forma se hicieron las respectivas modificaciones al sketch del desktop:
 
-// Ahora, el estado de transicion se calcula de forma continua, y se dibujan ambos de acuerdo al valor numerico recibido
-
-if (transition < 0.98) { /* tres espectros */ }
-if (transition > 0.02) { /* uno fusionado */ }
-
-```
-
-En general se elimino: La vrble'fusion' (booleana), la vrble 'transition' como estado local (ahora es derivada). El bloque de 'handleTouch' y sus condicionales de dirección 'up'/'down'. La dependencia de gestos táctiles para activar/desactivar la fusión     
-
-Y ps en este punto lo ultimo que hice fue agregar el triangulo detras del slider, solo como una decoracion que tenia pensada desde el boceto de la siguiente forma:
-
-```jsx
-// En la funcion draw():
- // Triángulo decorativo
-    noStroke();
-    fill(160, 100, 255, 80); // RGBA
-    const triHeight = 420;
-    const triWidth = 350;
-    const cx = width / 2;
-    const cy = height / 2;
-    triangle(cx - triWidth / 2, cy - triHeight / 2, cx + triWidth / 2, cy - triHeight / 2, cx, cy + triHeight / 2); // Triángulo apuntando hacia abajo
-
-```
-
-Asi quedo la interfaz del mobile:     
-<img src="https://github.com/user-attachments/assets/967be90d-86d7-4cbf-8a98-cef15cca107f" width="250">
+	```jsx
+	let songBlackSwan, songFakeLove, song;
+	let fft;
+	let socket;
+	
+	let hueShift = 0;
+	let rotationAngles = [0, 0, 0];
+	let baseRadius = 140;
+	let spacing = 90;
+	let fusionValue = 0; // 0 = tres anillos, 1 = uno solo
+	
+	let currentMode = 'BlackSwan'; // Cancion inicial
+	
+	let playButton, pauseButton, stopButton; // Botones de reproduccion musica
+	
+	function preload() {
+	    soundFormats('mp3');
+	    songBlackSwan = loadSound('blackswan.mp3');
+	    songFakeLove = loadSound('fakelove.mp3');
+	    song = songBlackSwan;
+	}
+	
+	function setup() {
+	    createCanvas(1900, 800);
+	    colorMode(HSB);
+	    fft = new p5.FFT();
+	    socket = io();
+	
+	    // Botones de control
+	    playButton = createButton('▶');
+	    pauseButton = createButton('⏸');
+	    stopButton = createButton('⏹');
+	
+	    styleButton(playButton, width - 120, height / 2 - 100);
+	    styleButton(pauseButton, width - 120, height / 2);
+	    styleButton(stopButton, width - 120, height / 2 + 100);
+	
+	    playButton.mousePressed(() => { if (!song.isPlaying()) song.loop(); });
+	    pauseButton.mousePressed(() => { if (song.isPlaying()) song.pause(); });
+	    stopButton.mousePressed(() => { song.stop(); });
+	
+	    userStartAudio();
+	
+	    // Microbit datos
+	    socket.on('microbit', (data) => {
+	        if (data.button === 'A') switchToFakeLove();
+	        if (data.button === 'B') switchToBlackSwan();
+	    });
+	
+	    // Mobile datos
+	    socket.on('message', handleTouch);
+	}
+	
+	function styleButton(btn, x, y) {
+	    btn.position(x, y);
+	    btn.size(60, 60);
+	    btn.style('font-size', '28px');
+	    btn.style('border', 'none');
+	    btn.style('border-radius', '50%');
+	    btn.style('background', 'rgba(100,0,200,0.4)');
+	    btn.style('color', 'white');
+	    btn.style('cursor', 'pointer');
+	    btn.style('backdrop-filter', 'blur(4px)');
+	    btn.mouseOver(() => btn.style('background', 'rgba(150,0,255,0.6)'));
+	    btn.mouseOut(() => btn.style('background', 'rgba(100,0,200,0.4)'));
+	}
+	
+	function switchToFakeLove() {
+	    if (currentMode === 'FakeLove') return;
+	    let currentTime = song.currentTime();
+	    currentMode = 'FakeLove';
+	    song.stop();
+	    song = songFakeLove;
+	    song.jump(currentTime);
+	    song.loop();
+	    hueShift = 0;
+	}
+	
+	function switchToBlackSwan() {
+	    if (currentMode === 'BlackSwan') return;
+	    let currentTime = song.currentTime();
+	    currentMode = 'BlackSwan';
+	    song.stop();
+	    song = songBlackSwan;
+	    song.jump(currentTime);
+	    song.loop();
+	    hueShift = 0;
+	}
+	
+	function handleTouch(data) {
+	    if (data.type === 'touch') {
+	        hueShift += data.direction === 'right' ? 10 : -10; // Antes decia: if (data.type === 'touch') { if (data.direction === "left") hueShift -= 10; else if (data.direction === "right") hueShift += 10;}
+	    }
+	    if (data.type === 'fusion') {
+	        fusionValue = constrain(data.value, 0, 1);
+	    }
+	}
+	
+	function draw() {
+	    background(currentMode === 'BlackSwan' ? 0 : color(280, 80, 30, 0.2));
+	    translate(width / 2, height / 2); // Mover origen
+	    noFill();
+	
+	    let spectrum = fft.analyze(); //Para dividir en frecuencias (graves, medios y agudos)
+	
+	    // Rotaciones independientes (el del medio gira al revés)
+	    rotationAngles[0] += 0.005;
+	    rotationAngles[1] -= 0.006;
+	    rotationAngles[2] += 0.007;
+	
+	    // Valores de fusión
+	    let transition = lerp(0, 1, fusionValue);
+	    let mergeOffset = spacing * transition;
+	    let alphaOuter = 255 * (1 - transition);
+	    let scaleCentral = 1 + 0.4 * transition;
+	
+	    // Título
+	    push();
+	    resetMatrix();
+	    textAlign(LEFT, CENTER);
+	    textSize(64);
+	    fill(255);
+	    text("Pulse of BTS", 100, height / 2 - 25);
+	    pop();
+	
+	    // Dibujo de los tres anillos (se acercan al centro)
+	    if (transition < 0.98) {
+	        push();
+	        strokeWeight(2);
+	        drawBars(spectrum, getRainbowColor(0), baseRadius - mergeOffset, baseRadius - mergeOffset + 40, rotationAngles[0], alphaOuter);
+	        drawBars(spectrum, getRainbowColor(120), baseRadius + spacing * (1 - transition / 2), baseRadius + spacing * (1 - transition / 2) + 40, rotationAngles[1], 255);
+	        drawBars(spectrum, getRainbowColor(240), baseRadius + spacing * 2 - mergeOffset, baseRadius + spacing * 2 - mergeOffset + 40, rotationAngles[2], alphaOuter);
+	        pop();
+	    }
+	
+	    // Dibujo del espectro fusionado (uno solo, más grande y brillante)
+	    if (transition > 0.02) {
+	        push();
+	        let glow = map(transition, 0, 1, 0, 80);
+	        strokeWeight(2.5 + glow * 0.02);
+	        drawBars(spectrum, getRainbowColor(hueShift), (baseRadius + spacing) * scaleCentral, (baseRadius + spacing + 80) * scaleCentral, rotationAngles[1], map(transition,0,1,0,255));
+	        pop();
+	    }
+	}
+	
+	// Dibujo de espectros: graves (interno), voces(medio), agudos(externo)
+	function drawBars(spectrum, col, minR, maxR, rotationAngle, alphaVal=255, start=0, end=1) {
+	    push();
+	    rotate(rotationAngle);
+	    col.setAlpha(alphaVal);
+	    stroke(col);
+	    let len = spectrum.length;
+	    for (let i = 0; i < 360; i += 3) {
+	        let index = floor(map(i,0,360,start*len,end*len));
+	        let amp = spectrum[index];
+	        let r = map(amp,0,255,minR,maxR); // radio segun la amplitud del sonido
+	        let rad = radians(i);
+	        line(minR*cos(rad), minR*sin(rad), r*cos(rad), r*sin(rad)); // (coordenadas x y y del radio interno, amplitud)
+	    }
+	    pop();
+	}
+	
+	function getRainbowColor(offset) { // variacion de paleta de colores
+	    let hue = (hueShift + offset) % 360;
+	    return color(hue, 100, 100);
+	}
+	
+	```
+	
+	En esta version se agrego la opcion de cambiar entre canciones. El microbit podia controlar eso con los botones A y B. Se añadieron las funciones `switchToFakeLove()` y `switchToBlackSwan()`. Ademas, en el `preload()` ahora se cargan las dos canciones, y en el `draw()` el fondo depende del tema que este sonando. Todo lo demas, como los anillos, la fusion y los botones de reproduccion, siguio igual
 
 #### Codigos 💻
 Sketch.js/mobile:
@@ -548,6 +928,7 @@ https://github.com/VanDiosa/Pulse-of
 
 
 ## ⭐ Autoevaluación
+
 
 
 
