@@ -47,7 +47,7 @@ Este es el boceto de como me imagine las interfaces:
 
 ### 📚Actividad 02  
 #### ✍️ Proceso de Construcción
-Este proyecto lo inicie usando el codigo de la actividad anterior, un visualizador de audio con tres circulos concentricos que reaccionaban al ritmo de una cancion (Black Swan de BTS). Esta versión inicial me servio como punto de partida para incorporar el microbit
+Este proyecto lo inicie usando el [codigo de la actividad anterior](https://github.com/VanDiosa/Pulse-of-Swan), un visualizador de audio con tres circulos concentricos que reaccionaban al ritmo de una cancion (Black Swan de BTS). Esta versión inicial me servio como punto de partida para incorporar el microbit
 
 En la primera clase de esta unidad:
 
@@ -323,7 +323,83 @@ if (mouseY > height - 150) {
 }
 ```
 
-En esta version se elimino:  El uso de `sliderY` (ya no era necesario). El bloque que enviaba el valor de fusión cada 5 frames: `if (frameCount % 5 === 0 && socket && socket.connected) {socket.emit('message', { type: 'fusion', value: fusionValue });}`. Todo el manejo de gestos en 4 direcciones (`up`, `down`, `left`, `right`) dentro de `touchMoved()`. Los mensajes de texto dinámicos (→ “Cambio de color”, ⬆ “Separando capas”, etc.). Y las referencias al `sliderX` lateral (`width * 0.85`) y sus etiquetas asociadas      
+En esta version se elimino:  El uso de `sliderY` (ya no era necesario). El bloque que enviaba el valor de fusión cada 5 frames: `if (frameCount % 5 === 0 && socket && socket.connected) {socket.emit('message', { type: 'fusion', value: fusionValue });}`. Todo el manejo de gestos en 4 direcciones (`up`, `down`, `left`, `right`) dentro de `touchMoved()`. Los mensajes de texto dinámicos (→ “Cambio de color”, ⬆ “Separando capas”, etc.). Y las referencias al `sliderX` lateral (`width * 0.85`) y sus etiquetas asociadas   
+
+En este punto visualmente ya me estaba agrandando mucho ya que se veia asi:     
+<img src="https://github.com/user-attachments/assets/a4794b1c-39c3-4c2f-9830-37ce19abfc0c" width="250">
+
+Pero se presentaba lo siguiente:
+
+“bien, en cuanto a distribucion vamos mejorando. pero al estar en 100% la fusion no se fusionan es como que al mover el slide se hace la transicion pero en lugar de pasar de 3 a 1 pasa de 3 a 3”
+
+“Perfecto 🫶 Vanesa, ya entendí clarito lo que pasa:
+el *slider visual* sí está mandando valores de fusión al servidor, pero el **código del escritorio (`desktop/sketch.js`) todavía no interpreta esos valores** —solo reacciona a “up” o “down”.     
+Por eso, aunque el slider cambie `fusionValue` (de 0 a 1), el desktop sigue leyendo solo `true` o `false` en `fusion`, lo que hace que la animación se quede “congelada” entre tres espectros.      
+Vamos a solucionarlo totalmente:     
+✅ el *mobile* enviará un valor de fusión continuo (`0–1`),    
+✅ el *desktop* lo recibirá como `fusionValue` y     
+✅ se usará directamente para interpolar el estado visual.”     
+
+Ahora pasamos a modificar el sketch del desktop, todo lo anterior fue solo en el mobile:
+
+```jsx
+// Se reemplazo el control booleano de fusion por un valor numerico continuo (de 0 a 1) para permitir control mediante slider desde el movil
+let fusionValue = 0;
+
+```
+
+```jsx
+// En la funcion setup() se cambio el listener del socket 
+socket.on('message', handleControl);
+```
+
+```jsx
+function handleControl(data) {
+    if (data.type === 'touch') {
+        if (data.direction === "left") hueShift -= 10;
+        else if (data.direction === "right") hueShift += 10;
+    }
+    
+    if (data.type === 'fusion') {
+        fusionValue = constrain(data.value, 0, 1);
+    }
+}
+
+// En la version anterior solo respondia a direcciones (up/down/left/right) sin valores numericos
+
+```
+
+```jsx
+// En la funcion draw():
+
+let transition = lerp(0, 1, fusionValue);
+
+// Ahora, el estado de transicion se calcula de forma continua, y se dibujan ambos de acuerdo al valor numerico recibido
+
+if (transition < 0.98) { /* tres espectros */ }
+if (transition > 0.02) { /* uno fusionado */ }
+
+```
+
+En general se elimino: La vrble'fusion' (booleana), la vrble 'transition' como estado local (ahora es derivada). El bloque de 'handleTouch' y sus condicionales de dirección 'up'/'down'. La dependencia de gestos táctiles para activar/desactivar la fusión     
+
+Y ps en este punto lo ultimo que hice fue agregar el triangulo detras del slider, solo como una decoracion que tenia pensada desde el boceto de la siguiente forma:
+
+```jsx
+// En la funcion draw():
+ // Triángulo decorativo
+    noStroke();
+    fill(160, 100, 255, 80); // RGBA
+    const triHeight = 420;
+    const triWidth = 350;
+    const cx = width / 2;
+    const cy = height / 2;
+    triangle(cx - triWidth / 2, cy - triHeight / 2, cx + triWidth / 2, cy - triHeight / 2, cx, cy + triHeight / 2); // Triángulo apuntando hacia abajo
+
+```
+
+Asi quedo la interfaz del mobile:     
+<img src="https://github.com/user-attachments/assets/967be90d-86d7-4cbf-8a98-cef15cca107f" width="250">
 
 #### Codigos 💻
 Sketch.js/mobile:
@@ -472,6 +548,7 @@ https://github.com/VanDiosa/Pulse-of
 
 
 ## ⭐ Autoevaluación
+
 
 
 
