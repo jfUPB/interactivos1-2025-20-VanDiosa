@@ -52,12 +52,117 @@ Este proyecto lo inicie usando el codigo de la actividad anterior, un visualizad
 En la primera clase de esta unidad:
 
 1. Revise el codigo, que estuviera funcionando correctamente, lo clone y subi a un nuevo repo de github
-2. Antes de la nueva interaccion me quise tomar el tiempo de poner mas bonita la interfaz del celular, ya que, solo era el fondo negro con un texto en el centro que decia deslizaste a tal lado o capas fusionadas o no…
-- Primero se logro tener el triangulo del slider, pero era meramente visual no funcional, y la punta quedo hacia arriba (en el boceto la imagine hacia abajo). Ademas sentia q el canva era muy pequeño entonces lo cambie para que se adaptara al tamaño de la pantalla dependiendo del celular usando:  `createCanvas(windowWidth, windowHeight);`
-- Chat me comento que P5.js tiene un elemento deslizante: `createSlider()`  pero al usar lo se me generaba de forma horizontal por lo que se formaba un conflicto con el cambio de color que se controlaba tmb de forma horizontal
-- Entonces dividi el canva en 3 zonas, una para el titulo, otra para el slider y abajo una zona para el cambio de color. Tmb opte por no usar el elemento antes mencionado, entonces se creo una linea y una perilla. Aqui se me presento otra situacion. Hasta el momento solo estaba modificando el codigo del sketch del mobile pero entonces para que el slider funcionara tmb modifique unas vrbles en el sketch del desktop, para que la fusion ya no dependiera de recibir que se movio de arriba a abajo si no de una vrblae entre 0 y 1. En este momento ya funcionaba todo bien. Pero no tenia el triangulo entonces simplemente lo añadi detras del slider como algo meramente estetico
-- Tmb use emojis para que no se sintiera una interfaz tan plana, y asi quedo:
-<img src="https://github.com/user-attachments/assets/82106d9b-4f2b-4537-b446-e8be518a7b69" width="300">
+2. Los primeros prompts q le mande a chat fueron los siguientes, copiare lo mas relevante para no saturar la bitacora:    
+”Hola chat, necesito ayuda para modificar el codigo de la unidad 7 de sistemas fisicos, para generar una nueva version del proyecto para mi unidad 8 ESTE ES EL PROYECTO DEL CUAL PARTIREMOS:       
+    Boceto e idea 🌟       
+    El visualizador esta inspirado en Black Swan de BTS. En el desktop, se encuentran tres circulos concentricos q representan las capas del sonido (voz, altos y bajos) que reaccionan visualmente al ritmo de la cancion. Desde el celular, el usuario puede interactuar en tiempo real: deslizar horizontalmente cambia la paleta de colores, y deslizar verticalmente acerca o separa los circulos, fusionándolos de 3 espectros a 1 solo       
+    Codigos 💻       
+    *(Le mande los codigos del apply de la unidad 7)*    
+    Porfa confirmame que entendiste“
+   
+    “Sí, Vanesa, entendí perfectamente 💡    
+    Este es tu proyecto **“Pulse of Swan 🦢”** de la **unidad 7**, que consiste en:     
+    *(resumen hecho por chat)*    
+    Así que trabajaremos sobre esa base para generar una **nueva versión del proyecto** para tu **unidad 8** ✅”    
+
+    “La nueva version sera la siguiente:      
+    *(Le copie todo lo que habia escrito en la actividad 1 de esta unidad 8)*    
+    Confirmame si lo entendiste, si guardaste los codigos base y si guardaste la informacion de la nueva version”     
+    
+    “Perfectamente entendido, Vanesa 💡
+    (…)
+    ✨ En resumen: ya tengo **guardados el código base** y toda la **información conceptual y funcional** de la nueva versión (unidad 8).
+    ¿Quieres que el siguiente paso sea que empecemos a **modificar el código del servidor, desktop y móvil** para implementar esta nueva versión paso a paso?”
+
+    Ya con chat contextualizado clone el proyecto y cree un nuevo repositorio
+
+3. Antes de la nueva interaccion me quise tomar el tiempo de poner mas bonita la interfaz del celular, ya que, solo era el fondo negro con un texto en el centro que decia deslizaste a tal lado o capas fusionadas o no…    
+    
+    Entonces le coloque a chat:    
+    “Lo primero que quiero hacer es modificar la interfaz del mobile, teniendo en cuenta mi boceto y descripcion    
+    *(le reenvie el codigo del sketch del mobile)*“    
+    
+    Estos fue lo que le agrego al codigo base:   
+    ```jsx
+    let triTop, triLeft, triRight;
+    let circlePos; 
+    let dragging = false;
+    ```
+    
+    ```jsx
+    // En la funcion draw()
+    triangle(triTop.x, triTop.y, triLeft.x, triLeft.y, triRight.x, triRight.y);
+    ```
+    
+    ```jsx
+    // En la funcion touchMoved()
+    if (dragging) {
+      circlePos.y = constrain(mouseY, minY, maxY);
+      let fusionLevel = map(circlePos.y, minY, maxY, 0, 1);
+      socket.emit('fusionControl', { value: fusionLevel });
+    }
+    ```
+    
+    ```jsx
+    // --- Detección punto dentro de triángulo ---
+    function pointInTriangle(px, py, v1, v2, v3) {
+      const areaOrig = abs((v2.x - v1.x) * (v3.y - v1.y) - (v3.x - v1.x) * (v2.y - v1.y));
+      const area1 = abs((v1.x - px) * (v2.y - py) - (v2.x - px) * (v1.y - py));
+      const area2 = abs((v2.x - px) * (v3.y - py) - (v3.x - px) * (v2.y - py));
+      const area3 = abs((v3.x - px) * (v1.y - py) - (v1.x - px) * (v3.y - py));
+      return abs(area1 + area2 + area3 - areaOrig) < 0.5;
+    }
+    ```
+    
+    ```jsx
+    function touchEnded() {
+      dragging = false;
+    }
+    ```
+
+Se logro tener el triangulo del slider, pero era meramente visual no funcional, y la punta quedo hacia arriba (en el boceto la imagine hacia abajo). Ademas sentia q el canva era muy pequeño entonces lo cambie para que se adaptara al tamaño de la pantalla dependiendo del celular usando:  `createCanvas(windowWidth, windowHeight);`. Entonces le coloque esto a chat:    
+“me gusta como se ve, pero el slider del triangulo es meramente visual, o sea lo que yo queria es que al arrastrar el circulo ps se fusionaran o no los espectros. Ademas, quiero que la punta este hacia abajo pq hacia abajo es fusionado, y que la base este hacia arriba pq hacia arriba es que sean 3 espectros     
+te mando nuevamente todos los codigos, para que me pases una nueva version del codigo:     
+*(le pase nuevamente los codigos)*”     
+
+“La idea es que, además de los gestos, puedas **controlar el nivel de fusión (0–1)** con un slider, y que este valor se envíe al escritorio en tiempo real.     
+P5.js tiene `createSlider()`, que podemos usar fácilmente.”     
+
+Estos fue lo que le agrego al codigo:
+
+```jsx
+// en la funcion setup:
+
+// Crear el slider para fusión
+    fusionSlider = createSlider(0, 100, 0);
+    fusionSlider.position(width / 2 - 100, height / 2);
+    fusionSlider.size(200);
+    fusionSlider.style('accent-color', '#ffffff');
+
+    fusionLabel = createP('Nivel de fusión: 0%');
+    fusionLabel.style('color', 'white');
+    fusionLabel.position(width / 2 - 80, height / 2 + 30);
+```
+
+```jsx
+//funcion draw:
+
+		// Leer valor del slider
+    let fusionValue = fusionSlider.value();
+
+    // Solo enviar si cambia el valor
+    if (fusionValue !== lastFusionValue) {
+        socket.emit('message', { type: 'fusion', value: fusionValue / 100 });
+        fusionLabel.html(`Nivel de fusión: ${fusionValue}%`);
+        lastFusionValue = fusionValue;
+    }
+```
+
+Y me sugirio eliminar lo siguiente: `triTop`, `triLeft`, `triRight`, `circlePos` . Función `pointInTriangle()`. Variable `dragging` y lógica de arrastre. Etiquetas visuales dentro del canvas. Evento `fusionControl` (reemplazado por `message` tipo `"fusion"`)      
+
+Como pudo ver chat me comento que P5.js tiene un elemento deslizante: `createSlider()`  pero al usar lo se me generaba de forma horizontal por lo que se formaba un conflicto con el cambio de color que se controlaba tmb de forma horizontal      
+
+
 
 #### Codigos 💻
 Sketch.js/mobile:
@@ -206,6 +311,7 @@ https://github.com/VanDiosa/Pulse-of
 
 
 ## ⭐ Autoevaluación
+
 
 
 
